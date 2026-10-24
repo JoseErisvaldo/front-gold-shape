@@ -25,8 +25,7 @@ export function isProductSortOption(value: string): value is ProductSortOption {
 
 export function getSortParams(option: ProductSortOption) {
   const found =
-    PRODUCT_SORT_OPTIONS.find((item) => item.value === option) ??
-    PRODUCT_SORT_OPTIONS[0];
+    PRODUCT_SORT_OPTIONS.find((item) => item.value === option) ?? PRODUCT_SORT_OPTIONS[0];
 
   return { sortBy: found.sortBy, order: found.order };
 }

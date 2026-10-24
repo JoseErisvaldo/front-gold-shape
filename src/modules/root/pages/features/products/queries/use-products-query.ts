@@ -6,8 +6,7 @@ import type { ProductsFilters } from "../types/product.types";
 export function useProductsQuery(filters: ProductsFilters) {
   return useInfiniteQuery({
     queryKey: productsQueryKeys.list(filters),
-    queryFn: ({ pageParam }) =>
-      getProductsService({ ...filters, cursor: pageParam }),
+    queryFn: ({ pageParam }) => getProductsService({ ...filters, cursor: pageParam }),
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     placeholderData: keepPreviousData,

@@ -1,8 +1,8 @@
-import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
 import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
+import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
+import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
 import { Box, Chip, Divider, Paper, Typography } from "@mui/material";
 import type { Store } from "../../types/store.types";
 
@@ -53,8 +53,7 @@ export function StoreCard({ store }: StoreCardProps) {
           alignItems: { xs: "flex-start", sm: "center" },
           flexDirection: { xs: "column", sm: "row" },
           gap: 2.5,
-          background:
-            "linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.015))",
+          background: "linear-gradient(135deg, rgba(22,163,74,0.08), rgba(22,163,74,0.015))",
         }}
       >
         <Box
@@ -131,17 +130,9 @@ export function StoreCard({ store }: StoreCardProps) {
             gap: 2,
           }}
         >
-          <InfoItem
-            icon={<StorefrontRoundedIcon />}
-            label="Nome da loja"
-            value={store.name}
-          />
+          <InfoItem icon={<StorefrontRoundedIcon />} label="Nome da loja" value={store.name} />
 
-          <InfoItem
-            icon={<LinkRoundedIcon />}
-            label="Identificador (slug)"
-            value={store.slug}
-          />
+          <InfoItem icon={<LinkRoundedIcon />} label="Identificador (slug)" value={store.slug} />
 
           <InfoItem
             icon={<WhatsAppIcon />}
@@ -220,9 +211,7 @@ function InfoItem({ icon, label, value }: InfoItemProps) {
       </Box>
 
       <Box sx={{ minWidth: 0 }}>
-        <Typography sx={{ color: "#6b7280", fontSize: 12, fontWeight: 500 }}>
-          {label}
-        </Typography>
+        <Typography sx={{ color: "#6b7280", fontSize: 12, fontWeight: 500 }}>{label}</Typography>
 
         <Typography
           sx={{

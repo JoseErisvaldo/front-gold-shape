@@ -25,9 +25,7 @@ export const createProductPayloadSchema = z
   })
   .strict()
   .refine(
-    (data) =>
-      new Set(data.variants.map((variant) => variant.sku)).size ===
-      data.variants.length,
+    (data) => new Set(data.variants.map((variant) => variant.sku)).size === data.variants.length,
     {
       message: "Não pode haver SKUs duplicados no mesmo produto",
       path: ["variants"],

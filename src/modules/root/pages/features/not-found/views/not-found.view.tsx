@@ -114,8 +114,8 @@ export function NotFoundView() {
             lineHeight: 1.7,
           }}
         >
-          Não encontramos o endereço que você tentou acessar. Volte para o
-          início e continue de onde parou.
+          Não encontramos o endereço que você tentou acessar. Volte para o início e continue de onde
+          parou.
         </Typography>
 
         <Stack

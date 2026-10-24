@@ -1,29 +1,21 @@
-import { useState } from "react";
 import { Alert, Box, Button, CircularProgress } from "@mui/material";
+import { useState } from "react";
 import { toast } from "sonner";
-import type { Category } from "../types/category.types";
+import { EmptyState } from "../../../../../../shared/components/layout/empty-state/empty-state";
+import { PageLayout } from "../../../../../../shared/components/layout/page-layout/page-layout";
 import { CategoriesHeader } from "../components/categories-header/categories-header";
 import { CategoriesList } from "../components/categories-list/categories-list";
 import { CreateCategoryDialog } from "../components/create-category-dialog/create-category-dialog";
 import { EditCategoryDrawer } from "../components/edit-category-drawer/edit-category-drawer";
-import { useCategoriesQuery } from "../queries/use-categories-query";
 import { useToggleCategoryActiveMutation } from "../mutations/use-toggle-category-active-mutation";
-import { EmptyState } from "../../../../../../shared/components/layout/empty-state/empty-state";
-import { PageLayout } from "../../../../../../shared/components/layout/page-layout/page-layout";
+import { useCategoriesQuery } from "../queries/use-categories-query";
+import type { Category } from "../types/category.types";
 
 export function CategoriesView() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null,
-  );
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
-  const {
-    data: categories = [],
-    isPending,
-    isError,
-    refetch,
-    isFetching,
-  } = useCategoriesQuery();
+  const { data: categories = [], isPending, isError, refetch, isFetching } = useCategoriesQuery();
 
   const toggleCategoryMutation = useToggleCategoryActiveMutation();
 
@@ -85,11 +77,7 @@ export function CategoriesView() {
                 size="small"
                 onClick={() => refetch()}
                 disabled={isFetching}
-                startIcon={
-                  isFetching ? (
-                    <CircularProgress size={14} color="inherit" />
-                  ) : undefined
-                }
+                startIcon={isFetching ? <CircularProgress size={14} color="inherit" /> : undefined}
               >
                 {isFetching ? "Carregando..." : "Tentar novamente"}
               </Button>

@@ -10,10 +10,7 @@ import { variantToFormValues } from "../helpers/product-to-form-values";
 import { useCreateProductVariantMutation } from "../mutations/use-create-product-variant-mutation";
 import { useUpdateProductVariantMutation } from "../mutations/use-update-product-variant-mutation";
 import { variantFormSchema } from "../schema/variant-form-schema";
-import type {
-  ProductVariantDetail,
-  VariantFormValues,
-} from "../types/product.types";
+import type { ProductVariantDetail, VariantFormValues } from "../types/product.types";
 
 type UseVariantFormOptions = {
   productId: string;
@@ -21,18 +18,12 @@ type UseVariantFormOptions = {
   onSaved: () => void;
 };
 
-export function useVariantForm({
-  productId,
-  variant,
-  onSaved,
-}: UseVariantFormOptions) {
+export function useVariantForm({ productId, variant, onSaved }: UseVariantFormOptions) {
   const isEditing = variant !== null;
 
   const form = useForm<VariantFormValues>({
     resolver: zodResolver(variantFormSchema),
-    defaultValues: variant
-      ? variantToFormValues(variant)
-      : createEmptyVariant(),
+    defaultValues: variant ? variantToFormValues(variant) : createEmptyVariant(),
     mode: "onTouched",
   });
 
@@ -77,7 +68,6 @@ export function useVariantForm({
     form,
     onSubmit,
     isEditing,
-    isSubmitting:
-      createVariantMutation.isPending || updateVariantMutation.isPending,
+    isSubmitting: createVariantMutation.isPending || updateVariantMutation.isPending,
   };
 }

@@ -1,9 +1,6 @@
 import { Alert } from "@mui/material";
 import { Controller, useFormContext } from "react-hook-form";
-import type {
-  CategoryOption,
-  ProductFormValues,
-} from "../../types/product.types";
+import type { CategoryOption, ProductFormValues } from "../../types/product.types";
 import { CategoriesAutocomplete } from "../categories-autocomplete/categories-autocomplete";
 import { ProductFormSection } from "../product-form-section/product-form-section";
 
@@ -27,8 +24,7 @@ export function ProductCategoriesField({
     >
       {isError && (
         <Alert severity="error" sx={{ mb: 2 }}>
-          Não foi possível carregar as categorias. Recarregue a página para
-          tentar novamente.
+          Não foi possível carregar as categorias. Recarregue a página para tentar novamente.
         </Alert>
       )}
 

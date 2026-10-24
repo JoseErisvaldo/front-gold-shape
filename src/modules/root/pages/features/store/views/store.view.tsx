@@ -1,5 +1,5 @@
-import { PageLayout } from "../../../../../../shared/components/layout/page-layout/page-layout";
 import { EmptyState } from "../../../../../../shared/components/layout/empty-state/empty-state";
+import { PageLayout } from "../../../../../../shared/components/layout/page-layout/page-layout";
 import { CreateStoreDialog } from "../components/create-store/create-store-dialog";
 import { StoresHeader } from "../components/create-store/store-header";
 import { StoresList } from "../components/create-store/store-list";
@@ -7,13 +7,7 @@ import { useCreateStore } from "../hooks/handle-create-store";
 import { useStoresQuery } from "../queries/use-stores-query";
 
 export function StoresView() {
-  const {
-    data: stores = [],
-    isPending,
-    isError,
-    isFetching,
-    refetch,
-  } = useStoresQuery();
+  const { data: stores = [], isPending, isError, isFetching, refetch } = useStoresQuery();
 
   const {
     isCreateDialogOpen,
@@ -44,14 +38,12 @@ export function StoresView() {
         {isPending && <div>Carregando lojas...</div>}
 
         {isError && (
-          <button onClick={() => refetch()} disabled={isFetching}>
-            Tentar novamente
+          <button type="button" onClick={() => refetch()} disabled={isFetching}>
+            {isFetching ? "Tentando novamente..." : "Tentar novamente"}
           </button>
         )}
 
-        {!isPending && !isError && stores.length > 0 && (
-          <StoresList stores={stores} />
-        )}
+        {!isPending && !isError && stores.length > 0 && <StoresList stores={stores} />}
 
         {!isPending && !isError && stores.length === 0 && (
           <EmptyState

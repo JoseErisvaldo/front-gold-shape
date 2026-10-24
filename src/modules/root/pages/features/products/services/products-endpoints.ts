@@ -4,6 +4,5 @@ export const productsEndpoints = {
   detail: (productId: string) => `/products/${productId}`,
   categories: (productId: string) => `/products/${productId}/categories`,
   variants: (productId: string) => `/products/${productId}/variants`,
-  variant: (productId: string, variantId: string) =>
-    `/products/${productId}/variants/${variantId}`,
+  variant: (productId: string, variantId: string) => `/products/${productId}/variants/${variantId}`,
 } as const;

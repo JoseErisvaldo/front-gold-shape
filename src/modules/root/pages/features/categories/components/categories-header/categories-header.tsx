@@ -7,10 +7,7 @@ type CategoriesHeaderProps = {
   isLoading: boolean;
 };
 
-export function CategoriesHeader({
-  onCreateClick,
-  isLoading,
-}: CategoriesHeaderProps) {
+export function CategoriesHeader({ onCreateClick, isLoading }: CategoriesHeaderProps) {
   return (
     <Box
       sx={{

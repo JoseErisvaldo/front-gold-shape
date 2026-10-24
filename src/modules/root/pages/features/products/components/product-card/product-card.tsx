@@ -1,18 +1,8 @@
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import StarRoundedIcon from "@mui/icons-material/StarRounded";
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  Chip,
-  Typography,
-} from "@mui/material";
+import { Box, Card, CardActionArea, CardContent, Chip, Typography } from "@mui/material";
 import { formatPrice } from "../../helpers/format-price";
-import {
-  getProductPricing,
-  getProductStock,
-} from "../../helpers/product-pricing";
+import { getProductPricing, getProductStock } from "../../helpers/product-pricing";
 import type { ProductListItem } from "../../types/product.types";
 
 type ProductCardProps = {
@@ -27,15 +17,11 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
   const stock = getProductStock(product.variants);
 
   const visibleCategories = product.categories.slice(0, MAX_VISIBLE_CATEGORIES);
-  const hiddenCategoriesCount =
-    product.categories.length - visibleCategories.length;
+  const hiddenCategoriesCount = product.categories.length - visibleCategories.length;
 
   const variantsLabel =
-    product.variants.length === 1
-      ? "1 variação"
-      : `${product.variants.length} variações`;
-  const stockLabel =
-    stock === null ? "Estoque não controlado" : `${stock} em estoque`;
+    product.variants.length === 1 ? "1 variação" : `${product.variants.length} variações`;
+  const stockLabel = stock === null ? "Estoque não controlado" : `${stock} em estoque`;
 
   const hasDiscount = pricing !== null && pricing.discountPercentage > 0;
 
@@ -229,9 +215,7 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
           {pricing ? (
             <Box>
               {pricing.hasMultiplePrices && (
-                <Typography sx={{ color: "#858A9D", fontSize: 11 }}>
-                  A partir de
-                </Typography>
+                <Typography sx={{ color: "#858A9D", fontSize: 11 }}>A partir de</Typography>
               )}
               <Box
                 sx={{
@@ -241,16 +225,11 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
                   columnGap: 1,
                 }}
               >
-                <Typography
-                  sx={{ color: "#292D45", fontSize: 18, fontWeight: 700 }}
-                >
+                <Typography sx={{ color: "#292D45", fontSize: 18, fontWeight: 700 }}>
                   {formatPrice(pricing.startingPrice)}
                 </Typography>
                 {hasDiscount && (
-                  <Typography
-                    component="s"
-                    sx={{ color: "#858A9D", fontSize: 12 }}
-                  >
+                  <Typography component="s" sx={{ color: "#858A9D", fontSize: 12 }}>
                     {formatPrice(pricing.originalPrice)}
                   </Typography>
                 )}
@@ -263,12 +242,8 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
           )}
 
           <Box sx={{ display: "flex", flexWrap: "wrap", columnGap: 1.5 }}>
-            <Typography sx={{ color: "#858A9D", fontSize: 12 }}>
-              {variantsLabel}
-            </Typography>
-            <Typography sx={{ color: "#858A9D", fontSize: 12 }}>
-              {stockLabel}
-            </Typography>
+            <Typography sx={{ color: "#858A9D", fontSize: 12 }}>{variantsLabel}</Typography>
+            <Typography sx={{ color: "#858A9D", fontSize: 12 }}>{stockLabel}</Typography>
           </Box>
         </CardContent>
       </CardActionArea>

@@ -10,10 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+import { AppButton } from "../../../../../../../shared/components/ui/app-button";
 import { createEmptyVariant } from "../../helpers/product-form-defaults";
 import type { ProductFormValues } from "../../types/product.types";
 import { ProductFormSection } from "../product-form-section/product-form-section";
-import { AppButton } from "../../../../../../../shared/components/ui/app-button";
 
 export function ProductVariantsFields() {
   const {
@@ -27,8 +27,7 @@ export function ProductVariantsFields() {
     name: "variants",
   });
 
-  const variantsError =
-    errors.variants?.root?.message ?? errors.variants?.message;
+  const variantsError = errors.variants?.root?.message ?? errors.variants?.message;
 
   return (
     <ProductFormSection
@@ -79,9 +78,7 @@ export function ProductVariantsFields() {
                   mb: 2,
                 }}
               >
-                <Typography
-                  sx={{ color: "#292D45", fontSize: 14, fontWeight: 600 }}
-                >
+                <Typography sx={{ color: "#292D45", fontSize: 14, fontWeight: 600 }}>
                   Variação {index + 1}
                 </Typography>
 
@@ -165,9 +162,7 @@ export function ProductVariantsFields() {
                     control={
                       <Switch
                         checked={activeField.value}
-                        onChange={(event) =>
-                          activeField.onChange(event.target.checked)
-                        }
+                        onChange={(event) => activeField.onChange(event.target.checked)}
                       />
                     }
                   />

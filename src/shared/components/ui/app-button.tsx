@@ -1,7 +1,7 @@
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { Button as MuiButton, CircularProgress } from "@mui/material";
 import type { ButtonProps } from "@mui/material";
+import { CircularProgress, Button as MuiButton } from "@mui/material";
 
 type AppButtonProps = ButtonProps & {
   isLoading?: boolean;
@@ -18,14 +18,9 @@ export function AppButton({
   ...props
 }: AppButtonProps) {
   const isCancelButton =
-    typeof children === "string" &&
-    children.trim().toLowerCase() === "cancelar";
+    typeof children === "string" && children.trim().toLowerCase() === "cancelar";
 
-  const defaultIcon = isCancelButton ? (
-    <CloseRoundedIcon />
-  ) : (
-    <AddRoundedIcon />
-  );
+  const defaultIcon = isCancelButton ? <CloseRoundedIcon /> : <AddRoundedIcon />;
 
   return (
     <MuiButton

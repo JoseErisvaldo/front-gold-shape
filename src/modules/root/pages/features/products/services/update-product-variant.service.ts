@@ -11,10 +11,7 @@ export async function updateProductVariantService(
 ): Promise<void> {
   try {
     const body = updateProductVariantPayloadSchema.parse(payload);
-    await apiClient.patch(
-      productsEndpoints.variant(productId, variantId),
-      body,
-    );
+    await apiClient.patch(productsEndpoints.variant(productId, variantId), body);
   } catch (error) {
     logError("updateProductVariantService", error);
     throw error;

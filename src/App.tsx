@@ -1,20 +1,14 @@
-import {
-  BrowserRouter,
-  Navigate,
-  Outlet,
-  Route,
-  Routes,
-} from "react-router-dom";
-import { CreateProductView } from "./modules/root/pages/features/products/views/create-product.view";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import { LoginView } from "./modules/root/pages/features/auth";
+import { CategoriesView } from "./modules/root/pages/features/categories";
 import { HomeView } from "./modules/root/pages/features/home";
 import { NotFoundView } from "./modules/root/pages/features/not-found";
+import { ProductsListView } from "./modules/root/pages/features/products";
+import { CreateProductView } from "./modules/root/pages/features/products/views/create-product.view";
 import { StoresView } from "./modules/root/pages/features/store";
-import { CategoriesView } from "./modules/root/pages/features/categories";
 import { AppLayout } from "./shared/components/layout";
 import { useAuthStore } from "./shared/store";
-import { ProductsListView } from "./modules/root/pages/features/products";
 
 function LoginRoute() {
   const session = useAuthStore((state) => state.session);

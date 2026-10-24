@@ -35,16 +35,11 @@ export function ProductFormSection({
         }}
       >
         <Box sx={{ minWidth: 0 }}>
-          <Typography
-            component="h2"
-            sx={{ color: "#292D45", fontSize: 17, fontWeight: 700 }}
-          >
+          <Typography component="h2" sx={{ color: "#292D45", fontSize: 17, fontWeight: 700 }}>
             {title}
           </Typography>
           {description && (
-            <Typography
-              sx={{ mt: 0.5, color: "#858A9D", fontSize: 13, lineHeight: 1.7 }}
-            >
+            <Typography sx={{ mt: 0.5, color: "#858A9D", fontSize: 13, lineHeight: 1.7 }}>
               {description}
             </Typography>
           )}

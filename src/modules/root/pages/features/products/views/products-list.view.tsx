@@ -1,9 +1,9 @@
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import { Alert, Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { AppButton } from "../../../../../../shared/components/ui/app-button";
 import { EmptyState } from "../../../../../../shared/components/layout/empty-state/empty-state";
 import { PageLayout } from "../../../../../../shared/components/layout/page-layout/page-layout";
+import { AppButton } from "../../../../../../shared/components/ui/app-button";
 import { EditProductDrawer } from "../components/edit-product-drawer/edit-product-drawer";
 import { ProductCard } from "../components/product-card/product-card";
 import { ProductsGridSkeleton } from "../components/product-card-skeleton/product-card-skeleton";
@@ -73,12 +73,7 @@ export function ProductsListView() {
             severity="error"
             sx={{ mb: 3 }}
             action={
-              <Button
-                color="inherit"
-                size="small"
-                onClick={() => refetch()}
-                disabled={isFetching}
-              >
+              <Button color="inherit" size="small" onClick={() => refetch()} disabled={isFetching}>
                 {isFetching ? "Carregando..." : "Tentar novamente"}
               </Button>
             }
@@ -103,11 +98,7 @@ export function ProductsListView() {
           >
             <ProductsGrid>
               {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onClick={openProduct}
-                />
+                <ProductCard key={product.id} product={product} onClick={openProduct} />
               ))}
             </ProductsGrid>
           </Box>

@@ -1,19 +1,16 @@
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import { Box, FormControlLabel, Stack, Switch, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
+import { AppButton } from "../../../../../../../shared/components/ui/app-button";
 import { useEditProductDetailsForm } from "../../hooks/use-edit-product-details-form";
 import type { ProductListItem } from "../../types/product.types";
-import { AppButton } from "../../../../../../../shared/components/ui/app-button";
 
 type EditProductDetailsFormProps = {
   product: ProductListItem;
 };
 
-export function EditProductDetailsForm({
-  product,
-}: EditProductDetailsFormProps) {
-  const { form, onSubmit, isDirty, isSubmitting } =
-    useEditProductDetailsForm(product);
+export function EditProductDetailsForm({ product }: EditProductDetailsFormProps) {
+  const { form, onSubmit, isDirty, isSubmitting } = useEditProductDetailsForm(product);
 
   const {
     register,

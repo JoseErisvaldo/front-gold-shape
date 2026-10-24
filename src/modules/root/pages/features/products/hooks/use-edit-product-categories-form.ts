@@ -15,8 +15,7 @@ export function useEditProductCategoriesForm(product: ProductListItem) {
   const savedIds = product.categories.map((category) => category.id);
 
   const hasChanges =
-    selectedIds.length !== savedIds.length ||
-    selectedIds.some((id) => !savedIds.includes(id));
+    selectedIds.length !== savedIds.length || selectedIds.some((id) => !savedIds.includes(id));
 
   const onSave = () => {
     updateCategoriesMutation.mutate(

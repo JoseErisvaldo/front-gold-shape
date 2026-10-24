@@ -38,9 +38,7 @@ export function CreateStoreDialog({
 }: CreateStoreDialogProps) {
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
-      <DialogTitle sx={{ color: "#20243a", fontWeight: 700 }}>
-        Criar loja
-      </DialogTitle>
+      <DialogTitle sx={{ color: "#20243a", fontWeight: 700 }}>Criar loja</DialogTitle>
 
       <DialogContent>
         <Typography sx={{ mb: 2, color: "#777d91", fontSize: 13 }}>
@@ -108,12 +106,7 @@ export function CreateStoreDialog({
         <Button
           variant="contained"
           onClick={onSubmit}
-          disabled={
-            !storeName.trim() ||
-            !storeSlug.trim() ||
-            !storeWhatsapp.trim() ||
-            isSubmitting
-          }
+          disabled={!storeName.trim() || !storeSlug.trim() || !storeWhatsapp.trim() || isSubmitting}
           sx={{
             bgcolor: "#6c5ce7",
             textTransform: "none",

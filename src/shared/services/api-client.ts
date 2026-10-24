@@ -2,8 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "../store";
 
 export const apiClient = axios.create({
-  baseURL:
-    import.meta.env.VITE_API_BASE_URL ?? "https://api-kanban-rust.vercel.app",
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? "https://api-kanban-rust.vercel.app",
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",

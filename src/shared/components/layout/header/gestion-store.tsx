@@ -1,12 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-export function GestionStore({
-  description,
-  page,
-}: {
-  description: string;
-  page?: string;
-}) {
+export function GestionStore({ description, page }: { description: string; page?: string }) {
   return (
     <Box>
       <Typography
@@ -35,9 +29,7 @@ export function GestionStore({
         {page}
       </Typography>
 
-      <Typography sx={{ mt: 0.75, color: "#777d91", fontSize: 14 }}>
-        {description}
-      </Typography>
+      <Typography sx={{ mt: 0.75, color: "#777d91", fontSize: 14 }}>{description}</Typography>
     </Box>
   );
 }
