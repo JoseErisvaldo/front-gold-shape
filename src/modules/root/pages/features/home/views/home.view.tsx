@@ -16,7 +16,7 @@ function BrandMark() {
         border: "1px solid",
         borderColor: "rgba(116, 99, 232, 0.2)",
         borderRadius: "10px",
-        background: "linear-gradient(145deg, #8979ff, #6955e8)",
+        background: "linear-gradient(145deg, #16A34A, #10a145)",
         boxShadow: "0 5px 15px rgba(91, 75, 222, 0.2)",
         transform: "rotate(-5deg)",
         "& > span": { borderRadius: "2px", bgcolor: "#fff" },
@@ -78,7 +78,7 @@ export function HomeView() {
           sx={{
             mt: 2.25,
             mb: -1,
-            color: "#7463e8",
+            color: "#16A34A",
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: "1.4px",

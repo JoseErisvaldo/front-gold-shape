@@ -1,16 +1,12 @@
 import { Alert, Box, Button, CircularProgress } from "@mui/material";
-import { useState } from "react";
 import { CreateStoreDialog } from "../components/create-store/create-store-dialog";
 import { StoresEmptyState } from "../components/create-store/store-empty-state";
 import { StoresHeader } from "../components/create-store/store-header";
 import { StoresList } from "../components/create-store/store-list";
-import { StoresSearch } from "../components/create-store/store-search";
 import { useCreateStore } from "../hooks/handle-create-store";
 import { useStoresQuery } from "../queries/use-stores-query";
 
 export function StoresView() {
-  const [search, setSearch] = useState("");
-
   const {
     data: stores = [],
     isPending,
@@ -34,15 +30,6 @@ export function StoresView() {
     handleCloseCreateDialog,
   } = useCreateStore();
 
-  const filteredStores = stores.filter((store) => {
-    const searchTerm = search.trim().toLowerCase();
-
-    return (
-      store.name.toLowerCase().includes(searchTerm) ||
-      store.slug.toLowerCase().includes(searchTerm)
-    );
-  });
-
   return (
     <Box
       component="main"
@@ -52,14 +39,15 @@ export function StoresView() {
         pt: { xs: 3, md: 6 },
         pb: 6,
         background:
-          "radial-gradient(circle at 10% 90%, rgba(111, 92, 231, 0.08), transparent 26%), #f4f6fb",
+          "radial-gradient(circle at 10% 90%, rgba(22, 163, 74, 0.08), transparent 26%), #f4f6fb",
       }}
     >
       <Box sx={{ width: "min(100%, 1120px)", mx: "auto" }}>
-        <StoresHeader onCreateClick={handleOpenCreateDialog} />
-
-        <StoresSearch value={search} onChange={setSearch} />
-
+        <StoresHeader
+          onCreateClick={handleOpenCreateDialog}
+          hasStore={stores.length > 0}
+          isLoading={isPending || isFetching}
+        />
         {isPending && (
           <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
             <CircularProgress />
@@ -90,13 +78,13 @@ export function StoresView() {
           </Alert>
         )}
 
-        {!isPending && !isError && filteredStores.length > 0 && (
-          <StoresList stores={filteredStores} />
+        {!isPending && !isError && stores.length > 0 && (
+          <StoresList stores={stores} />
         )}
 
-        {!isPending && !isError && filteredStores.length === 0 && (
+        {!isPending && !isError && stores.length === 0 && (
           <StoresEmptyState
-            hasSearch={Boolean(search.trim())}
+            hasSearch={false}
             onCreateClick={handleOpenCreateDialog}
           />
         )}

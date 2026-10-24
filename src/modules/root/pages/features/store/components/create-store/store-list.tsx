@@ -8,18 +8,7 @@ type StoresListProps = {
 
 export function StoresList({ stores }: StoresListProps) {
   return (
-    <Box
-      sx={{
-        display: "grid",
-        gridTemplateColumns: {
-          xs: "1fr",
-          sm: "repeat(2, 1fr)",
-          lg: "repeat(3, 1fr)",
-        },
-        gap: 2,
-        mt: 3,
-      }}
-    >
+    <Box sx={{}}>
       {stores.map((store) => (
         <StoreCard key={store.id ?? store.name} store={store} />
       ))}

@@ -39,7 +39,7 @@ export function AppLayout({ onLogout }: AppLayoutProps) {
             aria-label="Abrir navegação"
             onClick={() => setMobileSidebarOpen(true)}
             edge="start"
-            sx={{ width: 42, height: 42, mr: 1.25, color: "#5f52bd" }}
+            sx={{ width: 42, height: 42, mr: 1.25, color: "#16A34A" }}
           >
             <MenuRoundedIcon />
           </IconButton>
