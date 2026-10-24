@@ -1,13 +1,16 @@
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import FolderOpenRoundedIcon from "@mui/icons-material/FolderOpenRounded";
+import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
 import { Box, Button, Paper, Typography } from "@mui/material";
 
-type ProjectsEmptyStateProps = {
+type StoresEmptyStateProps = {
   hasSearch: boolean;
   onCreateClick: () => void;
 };
 
-export function ProjectsEmptyState({ hasSearch, onCreateClick }: ProjectsEmptyStateProps) {
+export function StoresEmptyState({
+  hasSearch,
+  onCreateClick,
+}: StoresEmptyStateProps) {
   return (
     <Paper
       elevation={0}
@@ -38,11 +41,16 @@ export function ProjectsEmptyState({ hasSearch, onCreateClick }: ProjectsEmptySt
           bgcolor: "#f1efff",
         }}
       >
-        <FolderOpenRoundedIcon sx={{ fontSize: 30 }} />
+        <StorefrontRoundedIcon sx={{ fontSize: 30 }} />
       </Box>
-      <Typography component="h2" sx={{ color: "#292d45", fontSize: 17, fontWeight: 700 }}>
-        {hasSearch ? "Nenhum projeto encontrado" : "Seus projetos começam aqui"}
+
+      <Typography
+        component="h2"
+        sx={{ color: "#292d45", fontSize: 17, fontWeight: 700 }}
+      >
+        {hasSearch ? "Nenhuma loja encontrada" : "Sua loja começa aqui"}
       </Typography>
+
       <Typography
         sx={{
           maxWidth: 400,
@@ -54,8 +62,9 @@ export function ProjectsEmptyState({ hasSearch, onCreateClick }: ProjectsEmptySt
       >
         {hasSearch
           ? "Tente outro termo de busca."
-          : "Crie um projeto para organizar tarefas, compartilhar ideias e manter o time em sintonia."}
+          : "Crie sua loja para organizar seus produtos e começar a gerenciar seu catálogo."}
       </Typography>
+
       {!hasSearch && (
         <Button
           variant="outlined"
@@ -69,7 +78,7 @@ export function ProjectsEmptyState({ hasSearch, onCreateClick }: ProjectsEmptySt
             textTransform: "none",
           }}
         >
-          Criar primeiro projeto
+          Criar primeira loja
         </Button>
       )}
     </Paper>

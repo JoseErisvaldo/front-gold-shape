@@ -16,7 +16,7 @@ function BrandMark() {
         border: "1px solid",
         borderColor: "rgba(116, 99, 232, 0.2)",
         borderRadius: "10px",
-        background: "linear-gradient(145deg, #8979ff, #6955e8)",
+        background: "linear-gradient(145deg, #16A34A, #10a145)",
         boxShadow: "0 5px 15px rgba(91, 75, 222, 0.2)",
         transform: "rotate(-5deg)",
         "& > span": { borderRadius: "2px", bgcolor: "#fff" },
@@ -70,7 +70,7 @@ export function HomeView() {
               fontWeight: 800,
             }}
           >
-            Fluxtiva
+            GoldShape
           </Typography>
         </Box>
         <Typography
@@ -78,7 +78,7 @@ export function HomeView() {
           sx={{
             mt: 2.25,
             mb: -1,
-            color: "#7463e8",
+            color: "#16A34A",
             fontSize: 11,
             fontWeight: 700,
             letterSpacing: "1.4px",
@@ -96,7 +96,7 @@ export function HomeView() {
             letterSpacing: "-1.7px",
           }}
         >
-          Bem-vindo à Fluxtiva
+          Bem-vindo à GoldShape
         </Typography>
         <Typography
           component="p"
@@ -108,8 +108,7 @@ export function HomeView() {
             lineHeight: 1.7,
           }}
         >
-          Seu espaço está pronto. Organize suas tarefas e acompanhe o progresso do time em um só
-          lugar.
+          Seu espaço está pronto. Organize seus catálogos.
         </Typography>
       </Paper>
     </Box>

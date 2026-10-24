@@ -1,12 +1,12 @@
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { InputAdornment, Paper, TextField } from "@mui/material";
 
-type ProjectsSearchProps = {
+type StoresSearchProps = {
   value: string;
   onChange: (value: string) => void;
 };
 
-export function ProjectsSearch({ value, onChange }: ProjectsSearchProps) {
+export function StoresSearch({ value, onChange }: StoresSearchProps) {
   return (
     <Paper
       elevation={0}
@@ -27,7 +27,7 @@ export function ProjectsSearch({ value, onChange }: ProjectsSearchProps) {
       <TextField
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder="Buscar projetos"
+        placeholder="Buscar lojas"
         fullWidth
         variant="standard"
         slotProps={{

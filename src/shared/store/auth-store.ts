@@ -26,7 +26,12 @@ const SESSION_TOKEN_FIELDS = [
 ] as const;
 
 function findToken(value: unknown, depth = 0): string | null {
-  if (typeof value !== "object" || value === null || Array.isArray(value) || depth > 6) {
+  if (
+    typeof value !== "object" ||
+    value === null ||
+    Array.isArray(value) ||
+    depth > 6
+  ) {
     return null;
   }
 
@@ -53,12 +58,13 @@ export const useAuthStore = create<AuthState>()(
       getAccessToken: () => findToken(get().session),
       updateSession: (sessionUpdate) => {
         const currentSession = get().session;
-        if (currentSession) set({ session: { ...currentSession, ...sessionUpdate } });
+        if (currentSession)
+          set({ session: { ...currentSession, ...sessionUpdate } });
       },
       clearSession: () => set({ session: null }),
     }),
     {
-      name: "fluxtiva-auth-session",
+      name: "GoldShape-auth-session",
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ session: state.session }),
     },

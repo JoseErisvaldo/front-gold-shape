@@ -3,7 +3,7 @@ import { AppBar, Box, IconButton, Toolbar, Typography } from "@mui/material";
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { AppSidebar } from "./app-sidebar";
-import { FLUXTIVA_SIDEBAR_CONFIG } from "./sidebar-config";
+import { GoldShape_SIDEBAR_CONFIG } from "./sidebar-config";
 
 type AppLayoutProps = {
   onLogout: () => void;
@@ -15,7 +15,7 @@ export function AppLayout({ onLogout }: AppLayoutProps) {
   return (
     <Box sx={{ minHeight: "100vh", bgcolor: "#f4f6fb" }}>
       <AppSidebar
-        config={FLUXTIVA_SIDEBAR_CONFIG}
+        config={GoldShape_SIDEBAR_CONFIG}
         mobileOpen={mobileSidebarOpen}
         onClose={() => setMobileSidebarOpen(false)}
         onItemClick={() => setMobileSidebarOpen(false)}
@@ -39,7 +39,7 @@ export function AppLayout({ onLogout }: AppLayoutProps) {
             aria-label="Abrir navegação"
             onClick={() => setMobileSidebarOpen(true)}
             edge="start"
-            sx={{ width: 42, height: 42, mr: 1.25, color: "#5f52bd" }}
+            sx={{ width: 42, height: 42, mr: 1.25, color: "#16A34A" }}
           >
             <MenuRoundedIcon />
           </IconButton>
@@ -52,7 +52,7 @@ export function AppLayout({ onLogout }: AppLayoutProps) {
               letterSpacing: "-0.6px",
             }}
           >
-            Fluxtiva
+            GoldShape
           </Typography>
         </Toolbar>
       </AppBar>

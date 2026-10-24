@@ -36,12 +36,12 @@ function BrandMark() {
         border: "1px solid",
         borderColor: "rgba(116, 99, 232, 0.2)",
         borderRadius: "10px",
-        background: "linear-gradient(145deg, #8979ff, #6955e8)",
+        background: "linear-gradient(145deg, #16A34A, #10a145)",
         boxShadow: "0 5px 15px rgba(91, 75, 222, 0.2)",
         transform: "rotate(-5deg)",
         "& > span": { borderRadius: "2px", bgcolor: "#fff" },
         "& > span:nth-of-type(2), & > span:nth-of-type(3)": { opacity: 0.68 },
-        "& > span:nth-of-type(4)": { bgcolor: "#c9c3ff" },
+        "& > span:nth-of-type(4)": { bgcolor: "#16A34A" },
       }}
     >
       <Box component="span" />
@@ -79,8 +79,8 @@ function NavigationItems({
             borderRadius: "9px",
             color: "#777d91",
             textDecoration: "none",
-            "&:hover": { color: "#5143bd", bgcolor: "#f6f4ff" },
-            "&.active": { color: "#6554d5", bgcolor: "#f1efff" },
+            "&:hover": { color: "#16A34A", bgcolor: "#f6f4ff" },
+            "&.active": { color: "#128d3f", bgcolor: "#f1efff" },
             "&.active:hover": { bgcolor: "#eae7ff" },
             "& .MuiListItemIcon-root": { minWidth: 36, color: "inherit" },
             "& .MuiListItemText-primary": { fontSize: 13, fontWeight: 600 },
@@ -153,7 +153,11 @@ function SidebarContents({
           {sectionLabel}
         </Typography>
       )}
-      <NavigationItems items={items} onItemClick={onItemClick} onAction={onAction} />
+      <NavigationItems
+        items={items}
+        onItemClick={onItemClick}
+        onAction={onAction}
+      />
 
       <Box sx={{ flex: 1, minHeight: 6 }} />
       {footerItems && footerItems.length > 0 && (
@@ -173,7 +177,11 @@ function SidebarContents({
             </Typography>
           )}
           <Divider sx={{ mb: 1.2, borderColor: "#eceef5" }} />
-          <NavigationItems items={footerItems} onItemClick={onItemClick} onAction={onAction} />
+          <NavigationItems
+            items={footerItems}
+            onItemClick={onItemClick}
+            onAction={onAction}
+          />
         </>
       )}
       <Typography
@@ -213,8 +221,15 @@ export function AppSidebar({
 }: AppSidebarProps) {
   return (
     <>
-      <Drawer variant="permanent" sx={{ ...drawerSx, display: { xs: "none", md: "block" } }}>
-        <SidebarContents {...config} onItemClick={onItemClick} onAction={onAction} />
+      <Drawer
+        variant="permanent"
+        sx={{ ...drawerSx, display: { xs: "none", md: "block" } }}
+      >
+        <SidebarContents
+          {...config}
+          onItemClick={onItemClick}
+          onAction={onAction}
+        />
       </Drawer>
       <Drawer
         variant="temporary"
@@ -223,7 +238,11 @@ export function AppSidebar({
         ModalProps={{ keepMounted: true }}
         sx={{ ...drawerSx, display: { xs: "block", md: "none" } }}
       >
-        <SidebarContents {...config} onItemClick={onItemClick ?? onClose} onAction={onAction} />
+        <SidebarContents
+          {...config}
+          onItemClick={onItemClick ?? onClose}
+          onAction={onAction}
+        />
       </Drawer>
     </>
   );
