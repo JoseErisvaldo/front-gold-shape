@@ -10,6 +10,7 @@ import { LoginView } from "./modules/root/pages/features/auth";
 import { HomeView } from "./modules/root/pages/features/home";
 import { NotFoundView } from "./modules/root/pages/features/not-found";
 import { StoresView } from "./modules/root/pages/features/store";
+import { CategoriesView } from "./modules/root/pages/features/categories";
 import { AppLayout } from "./shared/components/layout";
 import { useAuthStore } from "./shared/store";
 
@@ -50,6 +51,7 @@ function App() {
           <Route element={<AuthenticatedLayout />}>
             <Route path="/home" element={<HomeView />} />
             <Route path="/store" element={<StoresView />} />
+            <Route path="/categories" element={<CategoriesView />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundView />} />
