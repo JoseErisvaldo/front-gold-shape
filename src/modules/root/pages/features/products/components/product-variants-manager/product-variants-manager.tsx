@@ -97,8 +97,8 @@ function VariantRow({
               height: 22,
               fontSize: 12,
               fontWeight: 600,
-              color: isActive ? "#15803D" : "#5A5F73",
-              bgcolor: isActive ? "#DCFCE7" : "#EEF0F6",
+              bgcolor: isActive ? "#EAF7EE" : "#FEECEC",
+              color: isActive ? "#15803D" : "#DC2626",
             }}
           />
           <Typography sx={{ color: "#858A9D", fontSize: 12 }}>{stockLabel}</Typography>
