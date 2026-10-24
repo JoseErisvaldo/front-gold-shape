@@ -2,6 +2,7 @@ import StoreIcon from "@mui/icons-material/StoreRounded";
 import CategoriesIcon from "@mui/icons-material/CategoryRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import ProductIcon from "@mui/icons-material/Inventory2Rounded";
 import type { ReactNode } from "react";
 
 export type SidebarNavigationItem = {
@@ -37,6 +38,11 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
       label: "Categorias",
       to: "/categories",
       icon: <CategoriesIcon fontSize="small" />,
+    },
+    {
+      label: "Produtos",
+      to: "/products",
+      icon: <ProductIcon fontSize="small" />,
     },
   ],
   footerItems: [

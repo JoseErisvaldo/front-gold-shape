@@ -5,6 +5,7 @@ import { PostHogProvider } from "@posthog/react";
 import posthog from "posthog-js";
 import "./index.css";
 import App from "./App.tsx";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const rootElement = document.getElementById("root");
 
@@ -23,6 +24,7 @@ createRoot(rootElement).render(
       <PostHogProvider client={posthog}>
         <App />
       </PostHogProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryProvider>
   </StrictMode>,
 );
