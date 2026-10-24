@@ -7,13 +7,7 @@ import { useCreateStore } from "../hooks/handle-create-store";
 import { useStoresQuery } from "../queries/use-stores-query";
 
 export function StoresView() {
-  const {
-    data: stores = [],
-    isPending,
-    isError,
-    isFetching,
-    refetch,
-  } = useStoresQuery();
+  const { data: stores = [], isPending, isError, isFetching, refetch } = useStoresQuery();
 
   const {
     isCreateDialogOpen,
@@ -49,9 +43,7 @@ export function StoresView() {
           </button>
         )}
 
-        {!isPending && !isError && stores.length > 0 && (
-          <StoresList stores={stores} />
-        )}
+        {!isPending && !isError && stores.length > 0 && <StoresList stores={stores} />}
 
         {!isPending && !isError && stores.length === 0 && (
           <EmptyState

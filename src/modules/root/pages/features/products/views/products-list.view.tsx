@@ -73,12 +73,7 @@ export function ProductsListView() {
             severity="error"
             sx={{ mb: 3 }}
             action={
-              <Button
-                color="inherit"
-                size="small"
-                onClick={() => refetch()}
-                disabled={isFetching}
-              >
+              <Button color="inherit" size="small" onClick={() => refetch()} disabled={isFetching}>
                 {isFetching ? "Carregando..." : "Tentar novamente"}
               </Button>
             }
@@ -103,11 +98,7 @@ export function ProductsListView() {
           >
             <ProductsGrid>
               {products.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onClick={openProduct}
-                />
+                <ProductCard key={product.id} product={product} onClick={openProduct} />
               ))}
             </ProductsGrid>
           </Box>

@@ -25,8 +25,7 @@ export function useProductVariantsManager(productId: string) {
     isDialogOpen: dialog.open,
     editingVariant: dialog.variant,
     openCreateDialog: () => setDialog({ open: true, variant: null }),
-    openEditDialog: (variant: ProductVariantDetail) =>
-      setDialog({ open: true, variant }),
+    openEditDialog: (variant: ProductVariantDetail) => setDialog({ open: true, variant }),
     closeDialog: () => setDialog((current) => ({ ...current, open: false })),
   };
 }

@@ -12,9 +12,7 @@ function getEffectivePrice(variant: ProductVariant): number {
   return Math.round(variant.price * (1 - discount / 100) * 100) / 100;
 }
 
-export function getProductPricing(
-  variants: ProductVariant[],
-): ProductPricing | null {
+export function getProductPricing(variants: ProductVariant[]): ProductPricing | null {
   if (variants.length === 0) return null;
 
   const activeVariants = variants.filter((variant) => variant.active !== false);

@@ -6,14 +6,10 @@ import type {
 } from "../types/product.types";
 
 function toInputNumber(value: number | null | undefined): string {
-  return value === null || value === undefined
-    ? ""
-    : String(value).replace(".", ",");
+  return value === null || value === undefined ? "" : String(value).replace(".", ",");
 }
 
-export function productToEditFormValues(
-  product: ProductListItem,
-): EditProductFormValues {
+export function productToEditFormValues(product: ProductListItem): EditProductFormValues {
   return {
     name: product.name,
     brand: product.brand ?? "",
@@ -24,9 +20,7 @@ export function productToEditFormValues(
   };
 }
 
-export function variantToFormValues(
-  variant: ProductVariantDetail,
-): VariantFormValues {
+export function variantToFormValues(variant: ProductVariantDetail): VariantFormValues {
   return {
     sku: variant.sku,
     size: variant.size ?? "",

@@ -9,11 +9,8 @@ type EditProductDetailsFormProps = {
   product: ProductListItem;
 };
 
-export function EditProductDetailsForm({
-  product,
-}: EditProductDetailsFormProps) {
-  const { form, onSubmit, isDirty, isSubmitting } =
-    useEditProductDetailsForm(product);
+export function EditProductDetailsForm({ product }: EditProductDetailsFormProps) {
+  const { form, onSubmit, isDirty, isSubmitting } = useEditProductDetailsForm(product);
 
   const {
     register,

@@ -19,9 +19,7 @@ export type VariantFormValues = z.infer<typeof variantFormSchema>;
 export type CreateProductPayload = z.infer<typeof createProductPayloadSchema>;
 export type ProductVariantPayload = CreateProductPayload["variants"][number];
 export type UpdateProductPayload = z.infer<typeof updateProductPayloadSchema>;
-export type UpdateProductVariantPayload = z.infer<
-  typeof updateProductVariantPayloadSchema
->;
+export type UpdateProductVariantPayload = z.infer<typeof updateProductVariantPayloadSchema>;
 
 export type ProductListItem = z.infer<typeof productListItemSchema>;
 export type ProductVariant = ProductListItem["variants"][number];

@@ -6,9 +6,7 @@ import { productsPageSchema } from "../schema/products-page-schema";
 import type { ListProductsParams, ProductsPage } from "../types/product.types";
 import { productsEndpoints } from "./products-endpoints";
 
-export async function getProductsService(
-  params: ListProductsParams,
-): Promise<ProductsPage> {
+export async function getProductsService(params: ListProductsParams): Promise<ProductsPage> {
   try {
     const query = listProductsParamsSchema.parse(params);
     const { data } = await apiClient.get(productsEndpoints.collection, {

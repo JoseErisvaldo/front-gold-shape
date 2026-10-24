@@ -31,12 +31,7 @@ export function CategoriesAutocomplete({
       onChange={(_, selected) => onChange(selected.map((category) => category.id))}
       onBlur={onBlur}
       renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Categorias"
-          error={Boolean(error)}
-          helperText={error}
-        />
+        <TextField {...params} label="Categorias" error={Boolean(error)} helperText={error} />
       )}
     />
   );

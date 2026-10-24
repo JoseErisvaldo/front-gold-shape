@@ -9,9 +9,7 @@ type EditProductCategoriesFormProps = {
   product: ProductListItem;
 };
 
-export function EditProductCategoriesForm({
-  product,
-}: EditProductCategoriesFormProps) {
+export function EditProductCategoriesForm({ product }: EditProductCategoriesFormProps) {
   const {
     categories,
     isCategoriesLoading,
@@ -27,8 +25,7 @@ export function EditProductCategoriesForm({
     <Stack spacing={2.5}>
       {isCategoriesError && (
         <Alert severity="error">
-          Não foi possível carregar as categorias. Recarregue a página para
-          tentar novamente.
+          Não foi possível carregar as categorias. Recarregue a página para tentar novamente.
         </Alert>
       )}
 

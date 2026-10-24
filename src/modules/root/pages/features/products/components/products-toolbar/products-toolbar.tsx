@@ -1,14 +1,6 @@
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import {
-  Box,
-  Button,
-  IconButton,
-  InputAdornment,
-  MenuItem,
-  Paper,
-  TextField,
-} from "@mui/material";
+import { Box, Button, IconButton, InputAdornment, MenuItem, Paper, TextField } from "@mui/material";
 import {
   isProductSortOption,
   PRODUCT_SORT_OPTIONS,

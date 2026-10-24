@@ -23,9 +23,7 @@ export const productFormSchema = z
     variants: z.array(variantFormSchema).min(1, "Adicione pelo menos uma variação"),
   })
   .refine(
-    (data) =>
-      new Set(data.variants.map((variant) => variant.sku)).size ===
-      data.variants.length,
+    (data) => new Set(data.variants.map((variant) => variant.sku)).size === data.variants.length,
     {
       message: "Não pode haver SKUs duplicados no mesmo produto",
       path: ["variants"],

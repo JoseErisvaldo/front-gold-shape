@@ -1,14 +1,5 @@
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import {
-  Alert,
-  Box,
-  Button,
-  Chip,
-  IconButton,
-  Skeleton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, Chip, IconButton, Skeleton, Stack, Typography } from "@mui/material";
 import { AppButton } from "../../../../../../../shared/components/ui/app-button";
 import { formatPrice } from "../../helpers/format-price";
 import { getProductPricing } from "../../helpers/product-pricing";
@@ -61,9 +52,7 @@ function VariantRow({
         </Typography>
 
         {description && (
-          <Typography sx={{ color: "#858A9D", fontSize: 13 }}>
-            {description}
-          </Typography>
+          <Typography sx={{ color: "#858A9D", fontSize: 13 }}>{description}</Typography>
         )}
 
         {pricing && (
@@ -76,22 +65,15 @@ function VariantRow({
               mt: 0.75,
             }}
           >
-            <Typography
-              sx={{ color: "#292D45", fontSize: 16, fontWeight: 700 }}
-            >
+            <Typography sx={{ color: "#292D45", fontSize: 16, fontWeight: 700 }}>
               {formatPrice(pricing.startingPrice)}
             </Typography>
             {pricing.discountPercentage > 0 && (
               <>
-                <Typography
-                  component="s"
-                  sx={{ color: "#858A9D", fontSize: 12 }}
-                >
+                <Typography component="s" sx={{ color: "#858A9D", fontSize: 12 }}>
                   {formatPrice(pricing.originalPrice)}
                 </Typography>
-                <Typography
-                  sx={{ color: "#16A34A", fontSize: 12, fontWeight: 600 }}
-                >
+                <Typography sx={{ color: "#16A34A", fontSize: 12, fontWeight: 600 }}>
                   -{Math.round(pricing.discountPercentage)}%
                 </Typography>
               </>
@@ -119,9 +101,7 @@ function VariantRow({
               bgcolor: isActive ? "#DCFCE7" : "#EEF0F6",
             }}
           />
-          <Typography sx={{ color: "#858A9D", fontSize: 12 }}>
-            {stockLabel}
-          </Typography>
+          <Typography sx={{ color: "#858A9D", fontSize: 12 }}>{stockLabel}</Typography>
         </Box>
       </Box>
 
@@ -136,9 +116,7 @@ function VariantRow({
   );
 }
 
-export function ProductVariantsManager({
-  productId,
-}: ProductVariantsManagerProps) {
+export function ProductVariantsManager({ productId }: ProductVariantsManagerProps) {
   const {
     variants,
     isPending,
@@ -169,12 +147,7 @@ export function ProductVariantsManager({
         <Alert
           severity="error"
           action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={() => refetch()}
-              disabled={isFetching}
-            >
+            <Button color="inherit" size="small" onClick={() => refetch()} disabled={isFetching}>
               {isFetching ? "Carregando..." : "Tentar novamente"}
             </Button>
           }
@@ -184,20 +157,13 @@ export function ProductVariantsManager({
       )}
 
       {!isPending && !isError && variants.length === 0 && (
-        <Typography
-          sx={{ py: 4, textAlign: "center", color: "#858A9D", fontSize: 14 }}
-        >
-          Nenhuma variação cadastrada. Adicione a primeira para definir preço e
-          estoque.
+        <Typography sx={{ py: 4, textAlign: "center", color: "#858A9D", fontSize: 14 }}>
+          Nenhuma variação cadastrada. Adicione a primeira para definir preço e estoque.
         </Typography>
       )}
 
       {variants.map((variant) => (
-        <VariantRow
-          key={variant.id}
-          variant={variant}
-          onEdit={openEditDialog}
-        />
+        <VariantRow key={variant.id} variant={variant} onEdit={openEditDialog} />
       ))}
 
       <VariantFormDialog

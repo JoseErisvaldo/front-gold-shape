@@ -5,10 +5,7 @@ import { buildUpdateProductPayload } from "../helpers/build-update-product-paylo
 import { productToEditFormValues } from "../helpers/product-to-form-values";
 import { useUpdateProductMutation } from "../mutations/use-update-product-mutation";
 import { editProductFormSchema } from "../schema/edit-product-form-schema";
-import type {
-  EditProductFormValues,
-  ProductListItem,
-} from "../types/product.types";
+import type { EditProductFormValues, ProductListItem } from "../types/product.types";
 
 export function useEditProductDetailsForm(product: ProductListItem) {
   const form = useForm<EditProductFormValues>({

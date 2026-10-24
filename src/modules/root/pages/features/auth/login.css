@@ -3,9 +3,7 @@
   padding: 28px;
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(circle at 2% 96%, rgb(111 92 231 / 8%), transparent 24%),
-    #f4f6fb;
+  background: radial-gradient(circle at 2% 96%, rgb(111 92 231 / 8%), transparent 24%), #f4f6fb;
 }
 
 .login-layout {
@@ -590,9 +588,7 @@
   box-shadow: 0 0 0 3px rgb(116 99 232 / 10%);
 }
 
-.login-field
-  .MuiOutlinedInput-root.Mui-focused
-  .MuiOutlinedInput-notchedOutline {
+.login-field .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-width: 1px;
   border-color: #8274e8;
 }

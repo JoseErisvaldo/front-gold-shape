@@ -3,9 +3,7 @@ import { handleApiError, logError } from "../../../../../../shared/utils";
 import { createStoreSchema, storeSchema } from "../schema/store-schema";
 import type { CreateStorePayload, Store } from "../types/store.types";
 
-export async function createStoreService(
-  input: CreateStorePayload,
-): Promise<Store> {
+export async function createStoreService(input: CreateStorePayload): Promise<Store> {
   try {
     const payload = createStoreSchema.parse(input);
     const response = await apiClient.post<Store>("/stores", payload);

@@ -1,12 +1,7 @@
-import type {
-  CreateProductPayload,
-  ProductFormValues,
-} from "../types/product.types";
+import type { CreateProductPayload, ProductFormValues } from "../types/product.types";
 import { buildCreateVariantPayload } from "./build-variant-payload";
 
-export function buildCreateProductPayload(
-  values: ProductFormValues,
-): CreateProductPayload {
+export function buildCreateProductPayload(values: ProductFormValues): CreateProductPayload {
   return {
     name: values.name,
     brand: values.brand || undefined,

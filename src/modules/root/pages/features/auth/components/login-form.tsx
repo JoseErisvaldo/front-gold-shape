@@ -13,15 +13,7 @@ import { useLoginForm } from "../hooks/use-login-form";
 function MailIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 20 20" fill="none">
-      <rect
-        x="2.5"
-        y="4"
-        width="15"
-        height="12"
-        rx="3"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
+      <rect x="2.5" y="4" width="15" height="12" rx="3" stroke="currentColor" strokeWidth="1.5" />
       <path
         d="m4 6 6 4.5L16 6"
         stroke="currentColor"
@@ -44,12 +36,7 @@ function EyeIcon({ isVisible }: { isVisible: boolean }) {
       />
       <circle cx="10" cy="10" r="2.2" stroke="currentColor" strokeWidth="1.5" />
       {isVisible && (
-        <path
-          d="m3 3 14 14"
-          stroke="currentColor"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
+        <path d="m3 3 14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
       )}
     </svg>
   );
@@ -136,11 +123,7 @@ export function LoginForm() {
                       <InputAdornment position="end">
                         <IconButton
                           className="login-field__visibility"
-                          aria-label={
-                            isPasswordVisible
-                              ? "Ocultar senha"
-                              : "Mostrar senha"
-                          }
+                          aria-label={isPasswordVisible ? "Ocultar senha" : "Mostrar senha"}
                           aria-pressed={isPasswordVisible}
                           onClick={togglePasswordVisibility}
                           edge="end"
@@ -178,11 +161,7 @@ export function LoginForm() {
           }
           label="Manter conectado"
         />
-        <button
-          className="login-form__forgot"
-          type="button"
-          onClick={showPasswordRecoveryNotice}
-        >
+        <button className="login-form__forgot" type="button" onClick={showPasswordRecoveryNotice}>
           Esqueceu a senha?
         </button>
       </div>
@@ -213,20 +192,8 @@ export function LoginForm() {
 
       <p className="login-form__security">
         <svg aria-hidden="true" viewBox="0 0 16 16" fill="none">
-          <rect
-            x="3"
-            y="7"
-            width="10"
-            height="7"
-            rx="2"
-            stroke="currentColor"
-            strokeWidth="1.4"
-          />
-          <path
-            d="M5.5 7V4.8a2.5 2.5 0 0 1 5 0V7"
-            stroke="currentColor"
-            strokeWidth="1.4"
-          />
+          <rect x="3" y="7" width="10" height="7" rx="2" stroke="currentColor" strokeWidth="1.4" />
+          <path d="M5.5 7V4.8a2.5 2.5 0 0 1 5 0V7" stroke="currentColor" strokeWidth="1.4" />
         </svg>
         Seus dados são protegidos com criptografia
       </p>

@@ -1,7 +1,4 @@
-import type {
-  ProductFormValues,
-  VariantFormValues,
-} from "../types/product.types";
+import type { ProductFormValues, VariantFormValues } from "../types/product.types";
 
 export function createEmptyVariant(): VariantFormValues {
   return {

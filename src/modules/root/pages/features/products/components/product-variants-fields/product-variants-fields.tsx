@@ -27,8 +27,7 @@ export function ProductVariantsFields() {
     name: "variants",
   });
 
-  const variantsError =
-    errors.variants?.root?.message ?? errors.variants?.message;
+  const variantsError = errors.variants?.root?.message ?? errors.variants?.message;
 
   return (
     <ProductFormSection
@@ -79,9 +78,7 @@ export function ProductVariantsFields() {
                   mb: 2,
                 }}
               >
-                <Typography
-                  sx={{ color: "#292D45", fontSize: 14, fontWeight: 600 }}
-                >
+                <Typography sx={{ color: "#292D45", fontSize: 14, fontWeight: 600 }}>
                   Variação {index + 1}
                 </Typography>
 
@@ -165,9 +162,7 @@ export function ProductVariantsFields() {
                     control={
                       <Switch
                         checked={activeField.value}
-                        onChange={(event) =>
-                          activeField.onChange(event.target.checked)
-                        }
+                        onChange={(event) => activeField.onChange(event.target.checked)}
                       />
                     }
                   />

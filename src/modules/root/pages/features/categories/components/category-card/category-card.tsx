@@ -1,12 +1,5 @@
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import {
-  Box,
-  Checkbox,
-  Chip,
-  IconButton,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Checkbox, Chip, IconButton, Paper, Typography } from "@mui/material";
 import CircleIcon from "@mui/icons-material/Circle";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import type { Category } from "../../types/category.types";
@@ -142,9 +135,7 @@ export function CategoryCard({
             borderTop: "1px solid #F0F2F0",
           }}
         >
-          <Typography sx={{ fontSize: 12, color: "#66716A" }}>
-            Categoria ativa
-          </Typography>
+          <Typography sx={{ fontSize: 12, color: "#66716A" }}>Categoria ativa</Typography>
 
           <Checkbox
             checked={category.active}

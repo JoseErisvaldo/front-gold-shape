@@ -25,11 +25,7 @@ type VariantFormDialogProps = {
 
 type VariantFormBodyProps = Omit<VariantFormDialogProps, "open">;
 
-function VariantFormBody({
-  productId,
-  variant,
-  onClose,
-}: VariantFormBodyProps) {
+function VariantFormBody({ productId, variant, onClose }: VariantFormBodyProps) {
   const { form, onSubmit, isEditing, isSubmitting } = useVariantForm({
     productId,
     variant,
@@ -139,12 +135,7 @@ function VariantFormBody({
   );
 }
 
-export function VariantFormDialog({
-  open,
-  productId,
-  variant,
-  onClose,
-}: VariantFormDialogProps) {
+export function VariantFormDialog({ open, productId, variant, onClose }: VariantFormDialogProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -157,11 +148,7 @@ export function VariantFormDialog({
       fullScreen={isMobile}
       slotProps={{ paper: { sx: { borderRadius: isMobile ? 0 : "16px" } } }}
     >
-      <VariantFormBody
-        productId={productId}
-        variant={variant}
-        onClose={onClose}
-      />
+      <VariantFormBody productId={productId} variant={variant} onClose={onClose} />
     </Dialog>
   );
 }

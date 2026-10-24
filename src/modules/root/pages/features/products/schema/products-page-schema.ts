@@ -41,9 +41,7 @@ const productCategoryRelationSchema = z.object({
 
 const productCategoriesSchema = z
   .array(z.union([productCategorySchema, productCategoryRelationSchema]))
-  .transform((categories) =>
-    categories.map((item) => ("category" in item ? item.category : item)),
-  );
+  .transform((categories) => categories.map((item) => ("category" in item ? item.category : item)));
 
 export const productListItemSchema = z.object({
   id: z.string().uuid(),

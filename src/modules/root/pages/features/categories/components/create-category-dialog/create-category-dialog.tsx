@@ -30,11 +30,7 @@ export type CreateCategoryDialogProps = {
   onCreated?: () => void;
 };
 
-export function CreateCategoryDialog({
-  open,
-  onClose,
-  onCreated,
-}: CreateCategoryDialogProps) {
+export function CreateCategoryDialog({ open, onClose, onCreated }: CreateCategoryDialogProps) {
   const createCategoryMutation = useCreateCategoryMutation();
 
   const {
@@ -104,21 +100,14 @@ export function CreateCategoryDialog({
         }}
       >
         <Stack spacing={0.5}>
-          <Typography sx={{ variant: "h6", fontWeight: 700 }}>
-            Nova categoria
-          </Typography>
+          <Typography sx={{ variant: "h6", fontWeight: 700 }}>Nova categoria</Typography>
 
           <Typography variant="body2" color="text.secondary">
             Organize os suplementos da sua loja.
           </Typography>
         </Stack>
 
-        <IconButton
-          onClick={handleClose}
-          disabled={isLoading}
-          aria-label="Fechar"
-          size="small"
-        >
+        <IconButton onClick={handleClose} disabled={isLoading} aria-label="Fechar" size="small">
           <CloseIcon />
         </IconButton>
       </DialogTitle>
@@ -165,12 +154,7 @@ export function CreateCategoryDialog({
         </DialogContent>
 
         <DialogActions sx={{ px: 3, pb: 2.5, gap: 1 }}>
-          <AppButton
-            type="button"
-            variant="outlined"
-            onClick={handleClose}
-            disabled={isLoading}
-          >
+          <AppButton type="button" variant="outlined" onClick={handleClose} disabled={isLoading}>
             Cancelar
           </AppButton>
 

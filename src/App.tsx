@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  Navigate,
-  Outlet,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { CreateProductView } from "./modules/root/pages/features/products/views/create-product.view";
 import { Toaster } from "sonner";
 import { LoginView } from "./modules/root/pages/features/auth";

@@ -35,10 +35,7 @@ function EditProductDrawerContent({ product, onClose }: DrawerContentProps) {
         }}
       >
         <Box sx={{ minWidth: 0 }}>
-          <Typography
-            component="h2"
-            sx={{ color: "#292D45", fontSize: 18, fontWeight: 700 }}
-          >
+          <Typography component="h2" sx={{ color: "#292D45", fontSize: 18, fontWeight: 700 }}>
             Editar produto
           </Typography>
           <Typography noWrap sx={{ color: "#858A9D", fontSize: 13 }}>
@@ -86,13 +83,7 @@ export function EditProductDrawer({ product, onClose }: EditProductDrawerProps) 
         paper: { sx: { width: { xs: "100%", sm: 560 }, maxWidth: "100%" } },
       }}
     >
-      {product && (
-        <EditProductDrawerContent
-          key={product.id}
-          product={product}
-          onClose={onClose}
-        />
-      )}
+      {product && <EditProductDrawerContent key={product.id} product={product} onClose={onClose} />}
     </Drawer>
   );
 }

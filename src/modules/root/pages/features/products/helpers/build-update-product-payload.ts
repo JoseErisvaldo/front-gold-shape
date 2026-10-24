@@ -1,7 +1,4 @@
-import type {
-  EditProductFormValues,
-  UpdateProductPayload,
-} from "../types/product.types";
+import type { EditProductFormValues, UpdateProductPayload } from "../types/product.types";
 
 type ProductDirtyFields = Partial<Record<keyof EditProductFormValues, boolean>>;
 

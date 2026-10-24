@@ -13,17 +13,9 @@ import { PageLayout } from "../../../../../../shared/components/layout/page-layo
 
 export function CategoriesView() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null,
-  );
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
-  const {
-    data: categories = [],
-    isPending,
-    isError,
-    refetch,
-    isFetching,
-  } = useCategoriesQuery();
+  const { data: categories = [], isPending, isError, refetch, isFetching } = useCategoriesQuery();
 
   const toggleCategoryMutation = useToggleCategoryActiveMutation();
 
@@ -85,11 +77,7 @@ export function CategoriesView() {
                 size="small"
                 onClick={() => refetch()}
                 disabled={isFetching}
-                startIcon={
-                  isFetching ? (
-                    <CircularProgress size={14} color="inherit" />
-                  ) : undefined
-                }
+                startIcon={isFetching ? <CircularProgress size={14} color="inherit" /> : undefined}
               >
                 {isFetching ? "Carregando..." : "Tentar novamente"}
               </Button>

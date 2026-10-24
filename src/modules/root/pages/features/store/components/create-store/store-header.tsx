@@ -8,11 +8,7 @@ type StoresHeaderProps = {
   isLoading: boolean;
 };
 
-export function StoresHeader({
-  onCreateClick,
-  hasStore,
-  isLoading,
-}: StoresHeaderProps) {
+export function StoresHeader({ onCreateClick, hasStore, isLoading }: StoresHeaderProps) {
   return (
     <Box
       sx={{
@@ -31,11 +27,7 @@ export function StoresHeader({
       )}
 
       {!hasStore && (
-        <AppButton
-          isLoading={isLoading}
-          loadingText="Carregando..."
-          onClick={onCreateClick}
-        >
+        <AppButton isLoading={isLoading} loadingText="Carregando..." onClick={onCreateClick}>
           Nova loja
         </AppButton>
       )}
