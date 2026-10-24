@@ -35,13 +35,6 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
         border: "1px solid #DFE2EC",
         borderRadius: "16px",
         bgcolor: "#FFFFFF",
-        transition: "border-color .2s, box-shadow .2s",
-        "&:hover": onClick
-          ? {
-              borderColor: "#16A34A",
-              boxShadow: "0 8px 24px rgba(22, 163, 74, 0.12)",
-            }
-          : undefined,
       }}
     >
       <CardActionArea

@@ -3,6 +3,7 @@ import { PageLayout } from "../../../../../../shared/components/layout/page-layo
 import { CreateStoreDialog } from "../components/create-store/create-store-dialog";
 import { StoresHeader } from "../components/create-store/store-header";
 import { StoresList } from "../components/create-store/store-list";
+import { StoreCardSkeleton } from "../components/store-card-skeleton/store-card-skeleton";
 import { useCreateStore } from "../hooks/handle-create-store";
 import { useStoresQuery } from "../queries/use-stores-query";
 
@@ -35,7 +36,7 @@ export function StoresView() {
           />
         }
       >
-        {isPending && <div>Carregando lojas...</div>}
+        {isPending && <StoreCardSkeleton />}
 
         {isError && (
           <button type="button" onClick={() => refetch()} disabled={isFetching}>

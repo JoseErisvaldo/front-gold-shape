@@ -13,7 +13,7 @@ export function CategoriesList({
   categories,
   onEdit,
   onToggleActive,
-  togglingCategoryId,
+  togglingCategoryId = null,
 }: CategoriesListProps) {
   return (
     <Box
