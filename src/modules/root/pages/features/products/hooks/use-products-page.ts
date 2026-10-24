@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDebouncedValue } from "../../../../../../shared/hooks/use-debounced-value";
 import {
   DEFAULT_PRODUCT_SORT,
   getSortParams,
@@ -7,7 +8,6 @@ import {
 import { useProductsQuery } from "../queries/use-products-query";
 import type { ProductListItem, ProductsFilters } from "../types/product.types";
 import { useCategoryOptions } from "./use-category-options";
-import { useDebouncedValue } from "../../../../../../shared/hooks/use-debounced-value";
 
 const PAGE_SIZE = 12;
 

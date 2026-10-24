@@ -1,6 +1,6 @@
 import { apiClient } from "../../../../../../shared/services/api-client";
 import { categorySchema } from "../schema/category-schema";
-import { updateCategorySchema, type UpdateCategoryInput } from "../schema/update-category.schema";
+import { type UpdateCategoryInput, updateCategorySchema } from "../schema/update-category.schema";
 
 type UpdateCategoryParams = {
   id: string | number;

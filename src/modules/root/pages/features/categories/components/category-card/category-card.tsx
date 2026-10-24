@@ -1,7 +1,7 @@
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CircleIcon from "@mui/icons-material/Circle";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { Box, Checkbox, Chip, IconButton, Paper, Typography } from "@mui/material";
-import CircleIcon from "@mui/icons-material/Circle";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import type { Category } from "../../types/category.types";
 
 type CategoryCardProps = {

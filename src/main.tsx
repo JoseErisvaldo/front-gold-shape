@@ -1,11 +1,11 @@
+import { PostHogProvider } from "@posthog/react";
+import posthog from "posthog-js";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { QueryProvider } from "./app/providers/query-provider";
-import { PostHogProvider } from "@posthog/react";
-import posthog from "posthog-js";
 import "./index.css";
-import App from "./App.tsx";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import App from "./App.tsx";
 
 const rootElement = document.getElementById("root");
 

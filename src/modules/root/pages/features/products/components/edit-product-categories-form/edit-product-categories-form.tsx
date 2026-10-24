@@ -1,9 +1,9 @@
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import { Alert, Box, Stack } from "@mui/material";
+import { AppButton } from "../../../../../../../shared/components/ui/app-button";
 import { useEditProductCategoriesForm } from "../../hooks/use-edit-product-categories-form";
 import type { ProductListItem } from "../../types/product.types";
 import { CategoriesAutocomplete } from "../categories-autocomplete/categories-autocomplete";
-import { AppButton } from "../../../../../../../shared/components/ui/app-button";
 
 type EditProductCategoriesFormProps = {
   product: ProductListItem;

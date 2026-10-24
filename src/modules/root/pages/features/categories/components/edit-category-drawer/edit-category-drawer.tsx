@@ -1,13 +1,13 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import { Box, CircularProgress, Drawer, IconButton, TextField, Typography } from "@mui/material";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import type { Category } from "../../types/category.types";
-import { useUpdateCategoryMutation } from "../../mutations/use-update-category-mutation";
 import { AppButton } from "../../../../../../../shared/components/ui/app-button";
+import { useUpdateCategoryMutation } from "../../mutations/use-update-category-mutation";
+import type { Category } from "../../types/category.types";
 
 const editCategoryFormSchema = z.object({
   name: z.string().trim().min(1, "Informe o nome da categoria."),

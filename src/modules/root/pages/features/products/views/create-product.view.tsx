@@ -1,8 +1,8 @@
 import { FormProvider } from "react-hook-form";
+import { PageLayout } from "../../../../../../shared/components/layout/page-layout/page-layout";
 import { CreateProductForm } from "../components/create-product-form/create-product-form";
 import { CreateProductHeader } from "../components/create-product-header/create-product-header";
 import { useCreateProductPage } from "../hooks/use-create-product-page";
-import { PageLayout } from "../../../../../../shared/components/layout/page-layout/page-layout";
 
 export function CreateProductView() {
   const {

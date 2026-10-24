@@ -1,8 +1,8 @@
-import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
 import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
+import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
+import StorefrontRoundedIcon from "@mui/icons-material/StorefrontRounded";
 import UpdateRoundedIcon from "@mui/icons-material/UpdateRounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import LinkRoundedIcon from "@mui/icons-material/LinkRounded";
 import { Box, Chip, Divider, Paper, Typography } from "@mui/material";
 import type { Store } from "../../types/store.types";
 
