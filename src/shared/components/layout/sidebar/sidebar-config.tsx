@@ -1,4 +1,5 @@
 import StoreIcon from "@mui/icons-material/StoreRounded";
+import CategoriesIcon from "@mui/icons-material/CategoryRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import type { ReactNode } from "react";
@@ -31,6 +32,11 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
       label: "Loja",
       to: "/store",
       icon: <StoreIcon fontSize="small" />,
+    },
+    {
+      label: "Categorias",
+      to: "/categories",
+      icon: <CategoriesIcon fontSize="small" />,
     },
   ],
   footerItems: [
