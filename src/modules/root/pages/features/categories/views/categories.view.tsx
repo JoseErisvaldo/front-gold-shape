@@ -1,184 +1,139 @@
-import { useEffect } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useState } from "react";
+import { Alert, Box, Button, CircularProgress } from "@mui/material";
 import { toast } from "sonner";
-import { z } from "zod";
-import { useCreateCategoryMutation } from "../mutations/use-create-category-mutation";
-import { AppButton } from "../../../../../../shared/components/ui/app-button";
+import type { Category } from "../types/category.types";
+import { CategoriesHeader } from "../components/categories-header/categories-header";
+import { CategoriesList } from "../components/categories-list/categories-list";
+import { CreateCategoryDialog } from "../components/create-category-dialog/create-category-dialog";
+import { EditCategoryDrawer } from "../components/edit-category-drawer/edit-category-drawer";
+import { useCategoriesQuery } from "../queries/use-categories-query";
+import { useToggleCategoryActiveMutation } from "../mutations/use-toggle-category-active-mutation";
+import { EmptyState } from "../../../../../../shared/components/layout/empty-state/empty-state";
+import { PageLayout } from "../../../../../../shared/components/layout/page-layout/page-layout";
 
-const createCategorySchema = z.object({
-  name: z.string().trim().min(1, "Informe o nome da categoria."),
-  description: z.string().trim().optional(),
-});
-
-type CreateCategoryFormData = z.infer<typeof createCategorySchema>;
-
-export type CreateCategoryDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  onCreated?: () => void;
-};
-
-export function CreateCategoryDialog({
-  open,
-  onClose,
-  onCreated,
-}: CreateCategoryDialogProps) {
-  const createCategoryMutation = useCreateCategoryMutation();
+export function CategoriesView() {
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
 
   const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<CreateCategoryFormData>({
-    resolver: zodResolver(createCategorySchema),
-    defaultValues: {
-      name: "",
-      description: "",
-    },
-  });
+    data: categories = [],
+    isPending,
+    isError,
+    refetch,
+    isFetching,
+  } = useCategoriesQuery();
 
-  useEffect(() => {
-    if (open) {
-      reset({
-        name: "",
-        description: "",
-      });
-    }
-  }, [open, reset]);
+  const toggleCategoryMutation = useToggleCategoryActiveMutation();
 
-  const handleClose = () => {
-    if (createCategoryMutation.isPending) return;
-
-    reset();
-    onClose();
-  };
-
-  const onSubmit = async (values: CreateCategoryFormData) => {
+  const handleToggleActive = async (category: Category, active: boolean) => {
     try {
-      const slug = values.name
-        .trim()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-|-$/g, "");
-
-      await createCategoryMutation.mutateAsync({
-        name: values.name.trim(),
-        slug,
-        description: values.description?.trim() || undefined,
+      await toggleCategoryMutation.mutateAsync({
+        id: category.id,
+        active,
       });
 
-      toast.success("Categoria criada com sucesso!");
-      reset();
-      onCreated?.();
-      onClose();
+      if (active) {
+        toast.success("Categoria ativada com sucesso!");
+      } else {
+        toast.error("Categoria desativada com sucesso!");
+      }
     } catch {
-      toast.error("Não foi possível criar a categoria.");
+      toast.error("Não foi possível atualizar o status da categoria.");
     }
   };
 
-  const isLoading = isSubmitting || createCategoryMutation.isPending;
+  const handleCategoryCreated = () => {
+    setIsCreateDialogOpen(false);
+  };
+
+  const handleCategoryUpdated = () => {
+    setSelectedCategory(null);
+    toast.success("Categoria atualizada com sucesso!");
+  };
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-      <DialogTitle
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          pb: 1,
-        }}
+    <>
+      <PageLayout
+        header={
+          <CategoriesHeader
+            onCreateClick={() => setIsCreateDialogOpen(true)}
+            isLoading={isPending}
+          />
+        }
       >
-        <Stack spacing={0.5}>
-          <Typography sx={{ variant: "h6", fontWeight: 700 }}>
-            Nova categoria
-          </Typography>
-
-          <Typography variant="body2" color="text.secondary">
-            Organize os suplementos da sua loja.
-          </Typography>
-        </Stack>
-
-        <IconButton
-          onClick={handleClose}
-          disabled={isLoading}
-          aria-label="Fechar"
-          size="small"
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <DialogContent>
-          <Stack spacing={2.5} sx={{ pt: 1 }}>
-            <Controller
-              name="name"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Nome da categoria"
-                  placeholder="Ex.: Whey Protein"
-                  fullWidth
-                  required
-                  autoFocus
-                  error={Boolean(errors.name)}
-                  helperText={errors.name?.message}
-                  disabled={isLoading}
-                />
-              )}
-            />
-
-            <Controller
-              name="description"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Descrição"
-                  placeholder="Descreva os produtos desta categoria"
-                  fullWidth
-                  multiline
-                  minRows={3}
-                  error={Boolean(errors.description)}
-                  helperText={errors.description?.message}
-                  disabled={isLoading}
-                />
-              )}
-            />
-          </Stack>
-        </DialogContent>
-
-        <DialogActions sx={{ px: 3, pb: 2.5, gap: 1 }}>
-          <AppButton
-            type="button"
-            variant="outlined"
-            onClick={handleClose}
-            disabled={isLoading}
+        {isPending && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              py: 8,
+            }}
           >
-            Cancelar
-          </AppButton>
+            <CircularProgress />
+          </Box>
+        )}
 
-          <AppButton type="submit" disabled={isLoading} loading={isLoading}>
-            Criar categoria
-          </AppButton>
-        </DialogActions>
-      </form>
-    </Dialog>
+        {isError && (
+          <Alert
+            severity="error"
+            sx={{ mt: 3 }}
+            action={
+              <Button
+                color="inherit"
+                size="small"
+                onClick={() => refetch()}
+                disabled={isFetching}
+                startIcon={
+                  isFetching ? (
+                    <CircularProgress size={14} color="inherit" />
+                  ) : undefined
+                }
+              >
+                {isFetching ? "Carregando..." : "Tentar novamente"}
+              </Button>
+            }
+          >
+            Não foi possível carregar as categorias. Tente novamente.
+          </Alert>
+        )}
+
+        {!isPending && !isError && categories.length > 0 && (
+          <CategoriesList
+            categories={categories}
+            onEdit={setSelectedCategory}
+            onToggleActive={handleToggleActive}
+            togglingCategoryId={
+              toggleCategoryMutation.isPending
+                ? (toggleCategoryMutation.variables?.id ?? null)
+                : null
+            }
+          />
+        )}
+
+        {!isPending && !isError && categories.length === 0 && (
+          <EmptyState
+            title="Nenhuma categoria"
+            description="Crie sua primeira categoria para organizar os suplementos da loja."
+            actionLabel="Criar categoria"
+            onActionClick={() => setIsCreateDialogOpen(true)}
+          />
+        )}
+      </PageLayout>
+
+      <CreateCategoryDialog
+        open={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+        onCreated={handleCategoryCreated}
+      />
+
+      <EditCategoryDrawer
+        open={selectedCategory !== null}
+        category={selectedCategory}
+        onClose={() => setSelectedCategory(null)}
+        onUpdated={handleCategoryUpdated}
+      />
+    </>
   );
 }

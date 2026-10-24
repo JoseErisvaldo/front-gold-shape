@@ -1,270 +1,184 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
   Dialog,
-  DialogActions,
-  DialogContent,
   DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { createCategorySchema } from "../../schema/category-schema";
+import CloseIcon from "@mui/icons-material/Close";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 import { useCreateCategoryMutation } from "../../mutations/use-create-category-mutation";
-import type { CreateCategoryInput } from "../../types/category.types";
+import { AppButton } from "../../../../../../../shared/components/ui/app-button";
 
-type CreateCategoryDialogProps = {
+const createCategorySchema = z.object({
+  name: z.string().trim().min(1, "Informe o nome da categoria."),
+  description: z.string().trim().optional(),
+});
+
+type CreateCategoryFormData = z.infer<typeof createCategorySchema>;
+
+export type CreateCategoryDialogProps = {
   open: boolean;
   onClose: () => void;
+  onCreated?: () => void;
 };
-
-function generateSlug(value: string) {
-  return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 export function CreateCategoryDialog({
   open,
   onClose,
+  onCreated,
 }: CreateCategoryDialogProps) {
-  const mutation = useCreateCategoryMutation();
+  const createCategoryMutation = useCreateCategoryMutation();
 
   const {
-    register,
+    control,
     handleSubmit,
-    watch,
-    setValue,
     reset,
-    formState: { errors },
-  } = useForm<CreateCategoryInput>({
+    formState: { errors, isSubmitting },
+  } = useForm<CreateCategoryFormData>({
     resolver: zodResolver(createCategorySchema),
     defaultValues: {
       name: "",
-      slug: "",
       description: "",
     },
   });
 
-  const name = watch("name");
-
   useEffect(() => {
-    setValue("slug", generateSlug(name ?? ""), {
-      shouldDirty: false,
-      shouldValidate: false,
-    });
-  }, [name, setValue]);
-
-  useEffect(() => {
-    if (!open) {
-      reset();
-      mutation.reset();
+    if (open) {
+      reset({
+        name: "",
+        description: "",
+      });
     }
-  }, [open, reset, mutation.reset]);
+  }, [open, reset]);
 
-  const onSubmit = handleSubmit(async (values) => {
+  const handleClose = () => {
+    if (createCategoryMutation.isPending) return;
+
+    reset();
+    onClose();
+  };
+
+  const onSubmit = async (values: CreateCategoryFormData) => {
     try {
-      await mutation.mutateAsync({
+      const slug = values.name
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "");
+
+      await createCategoryMutation.mutateAsync({
         name: values.name.trim(),
-        slug: generateSlug(values.name),
+        slug,
         description: values.description?.trim() || undefined,
       });
 
+      toast.success("Categoria criada com sucesso!");
       reset();
+      onCreated?.();
       onClose();
     } catch {
-      return;
+      toast.error("Não foi possível criar a categoria.");
     }
-  });
+  };
+
+  const isLoading = isSubmitting || createCategoryMutation.isPending;
 
   return (
-    <Dialog
-      open={open}
-      onClose={mutation.isPending ? undefined : onClose}
-      fullWidth
-      maxWidth="sm"
-      slotProps={{
-        paper: {
-          sx: {
-            borderRadius: 3,
-            p: { xs: 0, sm: 0.5 },
-          },
-        },
-      }}
-    >
-      <Box component="form" onSubmit={onSubmit}>
-        <DialogTitle
-          sx={{
-            px: { xs: 2.5, sm: 3.5 },
-            pt: 3.5,
-            pb: 1,
-            color: "#292d45",
-            fontSize: 22,
-            fontWeight: 800,
-          }}
-        >
-          Nova categoria
-        </DialogTitle>
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          pb: 1,
+        }}
+      >
+        <Stack spacing={0.5}>
+          <Typography sx={{ variant: "h6", fontWeight: 700 }}>
+            Nova categoria
+          </Typography>
 
-        <DialogContent
-          sx={{
-            px: { xs: 2.5, sm: 3.5 },
-            pt: "16px !important",
-            pb: 2,
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 3,
-            }}
-          >
-            {mutation.isError && (
-              <Alert severity="error">
-                Não foi possível cadastrar a categoria. Verifique os dados e
-                tente novamente.
-              </Alert>
-            )}
+          <Typography variant="body2" color="text.secondary">
+            Organize os suplementos da sua loja.
+          </Typography>
+        </Stack>
 
-            <TextField
-              label="Nome da categoria"
-              placeholder="Ex.: Proteínas"
-              fullWidth
-              required
-              {...register("name")}
-              error={Boolean(errors.name)}
-              helperText={errors.name?.message}
-              sx={{
-                "& .MuiFormHelperText-root": {
-                  mx: 0,
-                  mt: 0.75,
-                },
-              }}
+        <IconButton
+          onClick={handleClose}
+          disabled={isLoading}
+          aria-label="Fechar"
+          size="small"
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+        <DialogContent>
+          <Stack spacing={2.5} sx={{ pt: 1 }}>
+            <Controller
+              name="name"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Nome da categoria"
+                  placeholder="Ex.: Whey Protein"
+                  fullWidth
+                  required
+                  autoFocus
+                  error={Boolean(errors.name)}
+                  helperText={errors.name?.message}
+                  disabled={isLoading}
+                />
+              )}
             />
 
-            <Box>
-              <Typography
-                sx={{
-                  mb: 1,
-                  color: "#64748b",
-                  fontSize: 13,
-                  fontWeight: 500,
-                }}
-              >
-                Slug
-              </Typography>
-
-              <TextField
-                placeholder="Gerado automaticamente"
-                fullWidth
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                  },
-                }}
-                {...register("slug")}
-                error={Boolean(errors.slug)}
-                sx={{
-                  "& .MuiInputBase-input": {
-                    color: "#64748b",
-                    cursor: "default",
-                  },
-                }}
-              />
-
-              <Typography
-                sx={{
-                  mt: 1,
-                  color: "#718078",
-                  fontSize: 12,
-                }}
-              >
-                Gerado automaticamente a partir do nome da categoria.
-              </Typography>
-            </Box>
-
-            <TextField
-              label="Descrição"
-              placeholder="Descreva os produtos desta categoria"
-              fullWidth
-              multiline
-              minRows={3}
-              {...register("description")}
-              error={Boolean(errors.description)}
-              helperText={errors.description?.message}
-              sx={{
-                "& .MuiFormHelperText-root": {
-                  mx: 0,
-                  mt: 0.75,
-                },
-              }}
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Descrição"
+                  placeholder="Descreva os produtos desta categoria"
+                  fullWidth
+                  multiline
+                  minRows={3}
+                  error={Boolean(errors.description)}
+                  helperText={errors.description?.message}
+                  disabled={isLoading}
+                />
+              )}
             />
-          </Box>
+          </Stack>
         </DialogContent>
 
-        <DialogActions
-          sx={{
-            px: { xs: 2.5, sm: 3.5 },
-            pt: 2,
-            pb: 3,
-            gap: 1.5,
-            flexWrap: "wrap",
-            "& > :not(style) ~ :not(style)": {
-              ml: 0,
-            },
-          }}
-        >
-          <Button
-            onClick={onClose}
-            disabled={mutation.isPending}
-            sx={{
-              minHeight: 42,
-              px: 2,
-              borderRadius: 2,
-              color: "#64748b",
-              textTransform: "none",
-              fontWeight: 600,
-            }}
+        <DialogActions sx={{ px: 3, pb: 2.5, gap: 1 }}>
+          <AppButton
+            type="button"
+            variant="outlined"
+            onClick={handleClose}
+            disabled={isLoading}
           >
             Cancelar
-          </Button>
+          </AppButton>
 
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={mutation.isPending}
-            startIcon={
-              mutation.isPending ? (
-                <CircularProgress size={18} color="inherit" />
-              ) : undefined
-            }
-            sx={{
-              minHeight: 42,
-              bgcolor: "#16A34A",
-              borderRadius: 2,
-              px: 2.5,
-              textTransform: "none",
-              fontWeight: 700,
-              boxShadow: "none",
-              "&:hover": {
-                bgcolor: "#15803D",
-                boxShadow: "none",
-              },
-            }}
-          >
-            {mutation.isPending ? "Cadastrando..." : "Cadastrar categoria"}
-          </Button>
+          <AppButton type="submit" disabled={isLoading} loading={isLoading}>
+            Criar categoria
+          </AppButton>
         </DialogActions>
-      </Box>
+      </form>
     </Dialog>
   );
 }
