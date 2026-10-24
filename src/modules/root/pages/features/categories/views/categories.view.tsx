@@ -1,10 +1,11 @@
-import { Alert, Box, Button, CircularProgress } from "@mui/material";
+import { Alert, Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
 import { toast } from "sonner";
 import { EmptyState } from "../../../../../../shared/components/layout/empty-state/empty-state";
 import { PageLayout } from "../../../../../../shared/components/layout/page-layout/page-layout";
 import { CategoriesHeader } from "../components/categories-header/categories-header";
 import { CategoriesList } from "../components/categories-list/categories-list";
+import { CategoriesListSkeleton } from "../components/categories-list-skeleton/categories-list-skeleton";
 import { CreateCategoryDialog } from "../components/create-category-dialog/create-category-dialog";
 import { EditCategoryDrawer } from "../components/edit-category-drawer/edit-category-drawer";
 import { useToggleCategoryActiveMutation } from "../mutations/use-toggle-category-active-mutation";
@@ -29,7 +30,7 @@ export function CategoriesView() {
       if (active) {
         toast.success("Categoria ativada com sucesso!");
       } else {
-        toast.error("Categoria desativada com sucesso!");
+        toast.success("Categoria desativada com sucesso!");
       }
     } catch {
       toast.error("Não foi possível atualizar o status da categoria.");
@@ -55,17 +56,7 @@ export function CategoriesView() {
           />
         }
       >
-        {isPending && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              py: 8,
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        )}
+        {isPending && <CategoriesListSkeleton />}
 
         {isError && (
           <Alert
@@ -73,6 +64,7 @@ export function CategoriesView() {
             sx={{ mt: 3 }}
             action={
               <Button
+                type="button"
                 color="inherit"
                 size="small"
                 onClick={() => refetch()}
