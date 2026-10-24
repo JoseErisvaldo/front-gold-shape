@@ -1,8 +1,15 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
+import { Toaster } from "sonner";
 import { LoginView } from "./modules/root/pages/features/auth";
 import { HomeView } from "./modules/root/pages/features/home";
 import { NotFoundView } from "./modules/root/pages/features/not-found";
-import { ProjectsView } from "./modules/root/pages/features/projects";
+import { StoresView } from "./modules/root/pages/features/store";
 import { AppLayout } from "./shared/components/layout";
 import { useAuthStore } from "./shared/store";
 
@@ -35,12 +42,14 @@ function AuthenticatedLayout() {
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" richColors />
+
       <Routes>
         <Route path="/" element={<LoginRoute />} />
         <Route element={<ProtectedHomeRoute />}>
           <Route element={<AuthenticatedLayout />}>
             <Route path="/home" element={<HomeView />} />
-            <Route path="/projects" element={<ProjectsView />} />
+            <Route path="/store" element={<StoresView />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundView />} />

@@ -1,4 +1,4 @@
-import ProjectIcon from "@mui/icons-material/FolderRounded";
+import StoreIcon from "@mui/icons-material/StoreRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import type { ReactNode } from "react";
@@ -18,8 +18,8 @@ export type AppSidebarConfig = {
   footerItems?: SidebarNavigationItem[];
 };
 
-export const FLUXTIVA_SIDEBAR_CONFIG: AppSidebarConfig = {
-  brand: "Fluxtiva",
+export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
+  brand: "GoldShape",
   sectionLabel: "ESPAÇO DE TRABALHO",
   items: [
     {
@@ -28,9 +28,9 @@ export const FLUXTIVA_SIDEBAR_CONFIG: AppSidebarConfig = {
       icon: <HomeRoundedIcon fontSize="small" />,
     },
     {
-      label: "Projetos",
-      to: "/projects",
-      icon: <ProjectIcon fontSize="small" />,
+      label: "Loja",
+      to: "/store",
+      icon: <StoreIcon fontSize="small" />,
     },
   ],
   footerItems: [

@@ -70,7 +70,7 @@ export function HomeView() {
               fontWeight: 800,
             }}
           >
-            Fluxtiva
+            GoldShape
           </Typography>
         </Box>
         <Typography
@@ -96,7 +96,7 @@ export function HomeView() {
             letterSpacing: "-1.7px",
           }}
         >
-          Bem-vindo à Fluxtiva
+          Bem-vindo à GoldShape
         </Typography>
         <Typography
           component="p"
@@ -108,8 +108,7 @@ export function HomeView() {
             lineHeight: 1.7,
           }}
         >
-          Seu espaço está pronto. Organize suas tarefas e acompanhe o progresso do time em um só
-          lugar.
+          Seu espaço está pronto. Organize seus catálogos.
         </Typography>
       </Paper>
     </Box>

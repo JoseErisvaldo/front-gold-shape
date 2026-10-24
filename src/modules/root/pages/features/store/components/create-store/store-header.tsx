@@ -1,11 +1,11 @@
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import { Box, Button, Typography } from "@mui/material";
 
-type ProjectsHeaderProps = {
+type StoresHeaderProps = {
   onCreateClick: () => void;
 };
 
-export function ProjectsHeader({ onCreateClick }: ProjectsHeaderProps) {
+export function StoresHeader({ onCreateClick }: StoresHeaderProps) {
   return (
     <Box
       sx={{
@@ -26,8 +26,9 @@ export function ProjectsHeader({ onCreateClick }: ProjectsHeaderProps) {
             letterSpacing: "1.4px",
           }}
         >
-          ESPAÇO DE TRABALHO
+          GESTÃO DA LOJA
         </Typography>
+
         <Typography
           component="h1"
           sx={{
@@ -39,12 +40,14 @@ export function ProjectsHeader({ onCreateClick }: ProjectsHeaderProps) {
             letterSpacing: "-1.6px",
           }}
         >
-          Projetos
+          Lojas
         </Typography>
+
         <Typography sx={{ mt: 0.75, color: "#777d91", fontSize: 14 }}>
-          Reúna tarefas e acompanhe o trabalho do seu time.
+          Gerencie sua loja e organize seu catálogo de produtos.
         </Typography>
       </Box>
+
       <Button
         variant="contained"
         startIcon={<AddRoundedIcon />}
@@ -61,7 +64,7 @@ export function ProjectsHeader({ onCreateClick }: ProjectsHeaderProps) {
           "&:hover": { bgcolor: "#5949d0" },
         }}
       >
-        Novo projeto
+        Nova loja
       </Button>
     </Box>
   );
