@@ -20,11 +20,13 @@ const ERROR_MESSAGES: Record<number, string> = {
   500: "Erro interno do servidor. Tente novamente mais tarde.",
 };
 
-export const DEFAULT_ERROR_MESSAGE = "Ops! Algo deu errado. Tente novamente em instantes.";
+export const DEFAULT_ERROR_MESSAGE =
+  "Ops! Algo deu errado. Tente novamente em instantes.";
 
 function getServerMessage(data: unknown): string | null {
   if (typeof data === "string" && data.trim()) return data.trim();
-  if (typeof data !== "object" || data === null || Array.isArray(data)) return null;
+  if (typeof data !== "object" || data === null || Array.isArray(data))
+    return null;
 
   const payload = data as Record<string, unknown>;
   for (const field of ["message", "error"]) {
