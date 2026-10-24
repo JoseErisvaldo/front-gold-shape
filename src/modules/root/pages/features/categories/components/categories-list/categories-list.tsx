@@ -1,13 +1,20 @@
 import { Box, Typography } from "@mui/material";
-import { CategoryCard } from "../category-card/category-card";
 import type { Category } from "../../types/category.types";
+import { CategoryCard } from "../category-card/category-card";
 
 type CategoriesListProps = {
   categories: Category[];
   onEdit?: (category: Category) => void;
+  onToggleActive?: (category: Category, active: boolean) => void;
+  togglingCategoryId?: string | number | null;
 };
 
-export function CategoriesList({ categories, onEdit }: CategoriesListProps) {
+export function CategoriesList({
+  categories,
+  onEdit,
+  onToggleActive,
+  togglingCategoryId,
+}: CategoriesListProps) {
   return (
     <Box
       sx={{
@@ -23,7 +30,13 @@ export function CategoriesList({ categories, onEdit }: CategoriesListProps) {
       }}
     >
       {categories.map((category) => (
-        <CategoryCard key={category.id} category={category} onEdit={onEdit} />
+        <CategoryCard
+          key={category.id}
+          category={category}
+          onEdit={onEdit}
+          onToggleActive={onToggleActive}
+          isToggling={togglingCategoryId === category.id}
+        />
       ))}
 
       {categories.length === 0 && (
@@ -40,22 +53,11 @@ export function CategoriesList({ categories, onEdit }: CategoriesListProps) {
             borderRadius: 3,
           }}
         >
-          <Typography
-            sx={{
-              fontWeight: 700,
-              color: "#17211B",
-            }}
-          >
+          <Typography sx={{ fontWeight: 700, color: "#17211B" }}>
             Nenhuma categoria encontrada
           </Typography>
 
-          <Typography
-            variant="body2"
-            sx={{
-              mt: 1,
-              color: "text.secondary",
-            }}
-          >
+          <Typography variant="body2" sx={{ mt: 1, color: "text.secondary" }}>
             Experimente alterar a busca ou cadastre uma nova categoria.
           </Typography>
         </Box>

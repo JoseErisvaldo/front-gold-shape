@@ -1,13 +1,29 @@
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import { Box, Chip, IconButton, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Checkbox,
+  Chip,
+  IconButton,
+  Paper,
+  Typography,
+} from "@mui/material";
+import CircleIcon from "@mui/icons-material/Circle";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import type { Category } from "../../types/category.types";
 
 type CategoryCardProps = {
   category: Category;
   onEdit?: (category: Category) => void;
+  onToggleActive?: (category: Category, active: boolean) => void;
+  isToggling?: boolean;
 };
 
-export function CategoryCard({ category, onEdit }: CategoryCardProps) {
+export function CategoryCard({
+  category,
+  onEdit,
+  onToggleActive,
+  isToggling = false,
+}: CategoryCardProps) {
   return (
     <Paper
       elevation={0}
@@ -63,9 +79,7 @@ export function CategoryCard({ category, onEdit }: CategoryCardProps) {
                 fontSize: 10,
                 fontWeight: 700,
                 borderRadius: 1.5,
-                "& .MuiChip-label": {
-                  px: 0.75,
-                },
+                "& .MuiChip-label": { px: 0.75 },
               }}
             />
 
@@ -117,6 +131,44 @@ export function CategoryCard({ category, onEdit }: CategoryCardProps) {
         >
           {category.description?.trim() || "Nenhuma descrição informada."}
         </Typography>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mt: 1.5,
+            pt: 1,
+            borderTop: "1px solid #F0F2F0",
+          }}
+        >
+          <Typography sx={{ fontSize: 12, color: "#66716A" }}>
+            Categoria ativa
+          </Typography>
+
+          <Checkbox
+            checked={category.active}
+            disabled={isToggling}
+            onChange={(_, checked) => onToggleActive?.(category, checked)}
+            icon={<CircleIcon />}
+            checkedIcon={<CheckCircleIcon />}
+            slotProps={{
+              input: {
+                "aria-label": `${category.active ? "Desativar" : "Ativar"} categoria ${category.name}`,
+              },
+            }}
+            sx={{
+              p: 0.5,
+              color: "#D1D5DB",
+              "&.Mui-checked": {
+                color: "#86EFAC",
+              },
+              "& .MuiSvgIcon-root": {
+                fontSize: 22,
+              },
+            }}
+          />
+        </Box>
       </Box>
     </Paper>
   );
