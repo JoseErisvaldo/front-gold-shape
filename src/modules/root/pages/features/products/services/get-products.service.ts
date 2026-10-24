@@ -1,4 +1,3 @@
-import z from "zod";
 import { apiClient } from "../../../../../../shared/services/api-client";
 import { logError } from "../../../../../../shared/utils";
 import { listProductsParamsSchema } from "../schema/list-products-params-schema";
