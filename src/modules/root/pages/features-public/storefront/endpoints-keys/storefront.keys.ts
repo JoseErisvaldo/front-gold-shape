@@ -9,4 +9,6 @@ export const storefrontQueryKeys = {
   product: (productId: string) => [...storefrontQueryKeys.all, "product", productId] as const,
   categories: () => [...storefrontQueryKeys.all, "categories"] as const,
   store: () => [...storefrontQueryKeys.all, "store"] as const,
+  deliveryAreas: (search: string) => ["storefront", "delivery-areas", search] as const,
+  deliveryArea: (areaId: string) => ["storefront", "delivery-area", areaId] as const,
 };

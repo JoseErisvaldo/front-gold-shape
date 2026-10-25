@@ -11,6 +11,8 @@ import {
   Paper,
   TextField,
 } from "@mui/material";
+import { useEffect, useRef } from "react";
+import { trackEvent } from "../../helpers/storefront-analytics";
 import {
   isStorefrontSortOption,
   STOREFRONT_SORT_OPTIONS,
@@ -28,6 +30,9 @@ type CatalogToolbarProps = {
   onClearFilters: () => void;
 };
 
+const SEARCH_TRACK_DELAY_MS = 1000;
+const MIN_SEARCH_LENGTH = 2;
+
 export function CatalogToolbar({
   search,
   onSearchChange,
@@ -38,6 +43,31 @@ export function CatalogToolbar({
   hasActiveFilters,
   onClearFilters,
 }: CatalogToolbarProps) {
+  const lastTrackedTerm = useRef("");
+
+  useEffect(() => {
+    const term = search.trim().toLowerCase();
+
+    if (term === "") {
+      lastTrackedTerm.current = "";
+      return;
+    }
+
+    if (term.length < MIN_SEARCH_LENGTH || term === lastTrackedTerm.current) return;
+
+    const timer = setTimeout(() => {
+      lastTrackedTerm.current = term;
+      trackEvent("catalog_searched", {
+        search_term: term,
+        term_length: term.length,
+        sort,
+        only_on_sale: onlyOnSale,
+      });
+    }, SEARCH_TRACK_DELAY_MS);
+
+    return () => clearTimeout(timer);
+  }, [search, sort, onlyOnSale]);
+
   return (
     <Paper
       elevation={0}
@@ -54,7 +84,11 @@ export function CatalogToolbar({
           display: "grid",
           alignItems: "center",
           gap: 1.5,
-          gridTemplateColumns: { xs: "1fr", sm: "1fr 200px", lg: "2fr 200px auto" },
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "1fr 200px",
+            lg: "2fr 200px auto",
+          },
         }}
       >
         <TextField
@@ -100,7 +134,14 @@ export function CatalogToolbar({
           ))}
         </TextField>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            flexWrap: "wrap",
+          }}
+        >
           <Chip
             clickable
             icon={<LocalOfferRoundedIcon />}

@@ -2,7 +2,9 @@ export { useCartSummary } from "./hooks/use-cart-summary";
 export { useCartStore } from "./store/cart.store";
 export type {
   CartItem,
+  DeliveryInfo,
   PublicCategory,
+  PublicDeliveryArea,
   PublicProduct,
   PublicStore,
 } from "./types/storefront.types";

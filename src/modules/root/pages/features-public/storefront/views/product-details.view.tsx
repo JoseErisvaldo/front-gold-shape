@@ -3,6 +3,7 @@ import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Alert, Box, Button, Chip, Divider, Paper, Stack, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { ProductCard } from "../components/product-card/product-card";
 import { ProductDetailsSkeleton } from "../components/product-details-skeleton/product-details-skeleton";
 import { ProductsGrid } from "../components/products-grid/products-grid";
@@ -11,6 +12,7 @@ import { SectionHeading } from "../components/section-heading/section-heading";
 import { VariantSelector } from "../components/variant-selector/variant-selector";
 import { formatPrice } from "../helpers/format-price";
 import { getEffectivePrice, getStockStatus } from "../helpers/product-pricing";
+import { toSlug, trackEvent, trackPageview } from "../helpers/storefront-analytics";
 import { getVariantLabel } from "../helpers/variant-label";
 import { useProductDetailsPage } from "../hooks/use-product-details-page";
 import type { PublicProduct } from "../types/storefront.types";
@@ -47,11 +49,28 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
     handleOrderOnWhatsApp,
   } = useProductDetailsPage(productId);
 
+  const productIdValue = product?.id;
+  const productName = product?.name;
+  const productBrand = product?.brand ?? null;
+
+  useEffect(() => {
+    if (!productIdValue || !productName) return;
+
+    trackPageview(`/produto/${toSlug(productName)}`);
+    trackEvent("product_viewed", {
+      product_name: productName,
+      brand: productBrand,
+      product_id: productIdValue,
+    });
+  }, [productIdValue, productName, productBrand]);
+
   const price = selectedVariant ? getEffectivePrice(selectedVariant) : null;
   const hasDiscount = selectedVariant !== null && price !== null && selectedVariant.price > price;
   const stock = selectedVariant ? getStockStatus(selectedVariant) : null;
 
-  const handleRelatedClick = (relatedProduct: PublicProduct) => onProductClick(relatedProduct.id);
+  const handleRelatedClick = (relatedProduct: PublicProduct) => {
+    onProductClick(relatedProduct.id);
+  };
 
   return (
     <Stack spacing={3}>
@@ -59,7 +78,12 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
         <Button
           startIcon={<ArrowBackRoundedIcon />}
           onClick={onBack}
-          sx={{ ml: -1, color: "#5A5F73", fontWeight: 600, textTransform: "none" }}
+          sx={{
+            ml: -1,
+            color: "#5A5F73",
+            fontWeight: 600,
+            textTransform: "none",
+          }}
         >
           Voltar ao catálogo
         </Button>
@@ -87,7 +111,10 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
           sx={{
             display: "grid",
             gap: { xs: 3, md: 5 },
-            gridTemplateColumns: { xs: "1fr", md: "minmax(0, 5fr) minmax(0, 6fr)" },
+            gridTemplateColumns: {
+              xs: "1fr",
+              md: "minmax(0, 5fr) minmax(0, 6fr)",
+            },
             p: { xs: 2, sm: 4 },
             border: "1px solid #DFE2EC",
             borderRadius: "20px",
@@ -111,7 +138,12 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
                 component="img"
                 src={product.imageUrl}
                 alt={product.name}
-                sx={{ width: "100%", height: "100%", p: 2, objectFit: "contain" }}
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  p: 2,
+                  objectFit: "contain",
+                }}
               />
             ) : (
               <Inventory2RoundedIcon sx={{ fontSize: 72, color: "#16A34A" }} />
@@ -122,11 +154,17 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
             <Box>
               {product.brand && (
                 <Typography
-                  sx={{ color: "#858A9D", fontSize: 12, fontWeight: 700, letterSpacing: 1 }}
+                  sx={{
+                    color: "#858A9D",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    letterSpacing: 1,
+                  }}
                 >
                   {product.brand.toUpperCase()}
                 </Typography>
               )}
+
               <Typography
                 component="h1"
                 sx={{
@@ -160,26 +198,42 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
             {price !== null && (
               <Box>
                 <Box
-                  sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", columnGap: 1.5 }}
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    alignItems: "center",
+                    columnGap: 1.5,
+                  }}
                 >
                   <Typography
-                    sx={{ color: "#292D45", fontSize: { xs: 30, md: 36 }, fontWeight: 800 }}
+                    sx={{
+                      color: "#292D45",
+                      fontSize: { xs: 30, md: 36 },
+                      fontWeight: 800,
+                    }}
                   >
                     {formatPrice(price)}
                   </Typography>
+
                   {hasDiscount && selectedVariant && (
                     <>
                       <Typography component="s" sx={{ color: "#858A9D", fontSize: 15 }}>
                         {formatPrice(selectedVariant.price)}
                       </Typography>
+
                       <Chip
                         size="small"
                         label={`-${Math.round(selectedVariant.discountPercentage ?? 0)}%`}
-                        sx={{ color: "#FFFFFF", bgcolor: "#F58A33", fontWeight: 700 }}
+                        sx={{
+                          color: "#FFFFFF",
+                          bgcolor: "#F58A33",
+                          fontWeight: 700,
+                        }}
                       />
                     </>
                   )}
                 </Box>
+
                 {quantity > 1 && (
                   <Typography sx={{ mt: 0.5, color: "#858A9D", fontSize: 13 }}>
                     Total: {formatPrice(price * quantity)}
@@ -200,9 +254,17 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
 
             {product.variants.length > 1 && (
               <Box>
-                <Typography sx={{ mb: 1, color: "#292D45", fontSize: 14, fontWeight: 700 }}>
+                <Typography
+                  sx={{
+                    mb: 1,
+                    color: "#292D45",
+                    fontSize: 14,
+                    fontWeight: 700,
+                  }}
+                >
                   Escolha uma opção
                 </Typography>
+
                 <VariantSelector
                   variants={product.variants}
                   selectedId={selectedVariant?.id ?? null}
@@ -222,6 +284,7 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
                 <Typography sx={{ color: "#292D45", fontSize: 14, fontWeight: 700 }}>
                   Quantidade
                 </Typography>
+
                 <QuantityStepper
                   value={quantity}
                   max={maxQuantity}
@@ -231,7 +294,13 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
               </Box>
             )}
 
-            <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 1.5 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                gap: 1.5,
+              }}
+            >
               <Button
                 fullWidth
                 disableElevation
@@ -276,13 +345,20 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
             {product.description && (
               <>
                 <Divider />
+
                 <Box>
                   <Typography
                     component="h2"
-                    sx={{ mb: 1, color: "#292D45", fontSize: 16, fontWeight: 700 }}
+                    sx={{
+                      mb: 1,
+                      color: "#292D45",
+                      fontSize: 16,
+                      fontWeight: 700,
+                    }}
                   >
                     Descrição
                   </Typography>
+
                   <Typography
                     sx={{
                       color: "#5A5F73",
@@ -303,6 +379,7 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
       {related.length > 0 && (
         <Box component="section" aria-label="Produtos relacionados" sx={{ pt: 2 }}>
           <SectionHeading title="Você também pode gostar" />
+
           <ProductsGrid>
             {related.map((relatedProduct) => (
               <ProductCard
