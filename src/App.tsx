@@ -8,7 +8,9 @@ import { NotFoundView } from "./modules/root/pages/features/not-found";
 import { ProductsListView } from "./modules/root/pages/features/products";
 import { CreateProductView } from "./modules/root/pages/features/products/views/create-product.view";
 import { StoresView } from "./modules/root/pages/features/store";
+import { ProfileView } from "./modules/root/pages/features/users";
 import { AppLayout } from "./shared/components/layout";
+import { queryClient } from "./shared/services/queries";
 import { useAuthStore } from "./shared/store";
 
 function LoginRoute() {
@@ -32,6 +34,7 @@ function AuthenticatedLayout() {
     <AppLayout
       onLogout={() => {
         clearSession();
+        queryClient.clear();
       }}
     />
   );
@@ -52,6 +55,7 @@ function App() {
             <Route path="/products" element={<ProductsListView />} />
             <Route path="/products/create" element={<CreateProductView />} />
             <Route path="/delivery-areas" element={<DeliveryAreasListView />} />
+            <Route path="/profile" element={<ProfileView />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundView />} />
