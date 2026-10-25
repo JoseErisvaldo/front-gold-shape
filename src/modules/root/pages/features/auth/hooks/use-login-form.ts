@@ -42,13 +42,6 @@ export function useLoginForm() {
     setIsPasswordVisible((visible) => !visible);
   }
 
-  function showPasswordRecoveryNotice() {
-    setIsRequestError(false);
-    setNotice(
-      "A recuperação de senha estará disponível após a integração com o serviço de autenticação.",
-    );
-  }
-
   return {
     ...form,
     isPasswordVisible,
@@ -56,6 +49,5 @@ export function useLoginForm() {
     isRequestError,
     onSubmit,
     togglePasswordVisibility,
-    showPasswordRecoveryNotice,
   };
 }

@@ -51,7 +51,6 @@ export function LoginForm() {
     isRequestError,
     onSubmit,
     togglePasswordVisibility,
-    showPasswordRecoveryNotice,
   } = useLoginForm();
 
   return (
@@ -72,7 +71,7 @@ export function LoginForm() {
                 id="login-email"
                 className="login-field"
                 type="email"
-                placeholder="voce@empresa.com"
+                placeholder="voce@goldshape.com.br"
                 autoComplete="email"
                 fullWidth
                 error={Boolean(errors.email)}
@@ -161,9 +160,13 @@ export function LoginForm() {
           }
           label="Manter conectado"
         />
-        <button className="login-form__forgot" type="button" onClick={showPasswordRecoveryNotice}>
+        {/*<button
+          className="login-form__forgot"
+          type="button"
+          onClick={showPasswordRecoveryNotice}
+        >
           Esqueceu a senha?
-        </button>
+        </button>*/}
       </div>
 
       {notice && (
@@ -184,7 +187,7 @@ export function LoginForm() {
         disableElevation
         disabled={isSubmitting}
       >
-        {isSubmitting ? "Validando…" : "Entrar na plataforma"}
+        {isSubmitting ? "Validando…" : "Entrar no painel"}
         <span aria-hidden="true" className="login-form__submit-arrow">
           →
         </span>

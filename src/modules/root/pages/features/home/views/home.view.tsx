@@ -1,37 +1,5 @@
 import { Box, Paper, Typography } from "@mui/material";
-
-function BrandMark() {
-  return (
-    <Box
-      aria-hidden="true"
-      sx={{
-        width: 30,
-        height: 30,
-        display: "grid",
-        gridTemplateColumns: "repeat(2, 1fr)",
-        gridTemplateRows: "repeat(2, 1fr)",
-        gap: "3px",
-        p: "3px",
-        overflow: "hidden",
-        border: "1px solid",
-        borderColor: "rgba(116, 99, 232, 0.2)",
-        borderRadius: "10px",
-        background: "linear-gradient(145deg, #16A34A, #10a145)",
-        boxShadow: "0 5px 15px rgba(91, 75, 222, 0.2)",
-        transform: "rotate(-5deg)",
-        "& > span": { borderRadius: "2px", bgcolor: "#fff" },
-        "& > span:nth-of-type(2), & > span:nth-of-type(3)": { opacity: 0.68 },
-        "& > span:nth-of-type(4)": { bgcolor: "#c9c3ff" },
-      }}
-    >
-      <Box component="span" />
-      <Box component="span" />
-      <Box component="span" />
-      <Box component="span" />
-    </Box>
-  );
-}
-
+import goldShapeLogo from "../../../../../../assets/goldshape-logo.png";
 export function HomeView() {
   return (
     <Box
@@ -60,7 +28,7 @@ export function HomeView() {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
-          <BrandMark />
+          <img className="brand-mark" src={goldShapeLogo} alt="" width={44} height={44} />
           <Typography
             component="span"
             sx={{
