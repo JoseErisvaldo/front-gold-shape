@@ -44,6 +44,11 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
       to: "/products",
       icon: <ProductIcon fontSize="small" />,
     },
+    {
+      label: "Áreas de entrega",
+      to: "/delivery-areas",
+      icon: <StoreIcon fontSize="small" />,
+    },
   ],
   footerItems: [
     {

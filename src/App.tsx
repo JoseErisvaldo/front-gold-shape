@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom
 import { Toaster } from "sonner";
 import { LoginView } from "./modules/root/pages/features/auth";
 import { CategoriesView } from "./modules/root/pages/features/categories";
+import { DeliveryAreasListView } from "./modules/root/pages/features/delivery-areas";
 import { HomeView } from "./modules/root/pages/features/home";
 import { NotFoundView } from "./modules/root/pages/features/not-found";
 import { ProductsListView } from "./modules/root/pages/features/products";
@@ -50,6 +51,7 @@ function App() {
             <Route path="/categories" element={<CategoriesView />} />
             <Route path="/products" element={<ProductsListView />} />
             <Route path="/products/create" element={<CreateProductView />} />
+            <Route path="/delivery-areas" element={<DeliveryAreasListView />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundView />} />
