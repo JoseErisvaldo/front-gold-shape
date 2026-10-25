@@ -2,38 +2,7 @@ import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-function BrandMark() {
-  return (
-    <Box
-      aria-hidden="true"
-      sx={{
-        width: 30,
-        height: 30,
-        display: "grid",
-        gridTemplateColumns: "repeat(2, 1fr)",
-        gridTemplateRows: "repeat(2, 1fr)",
-        gap: "3px",
-        p: "3px",
-        overflow: "hidden",
-        border: "1px solid",
-        borderColor: "rgba(116, 99, 232, 0.2)",
-        borderRadius: "10px",
-        background: "linear-gradient(145deg, #8979ff, #6955e8)",
-        boxShadow: "0 5px 15px rgba(91, 75, 222, 0.2)",
-        transform: "rotate(-5deg)",
-        "& > span": { borderRadius: "2px", bgcolor: "#fff" },
-        "& > span:nth-of-type(2), & > span:nth-of-type(3)": { opacity: 0.68 },
-        "& > span:nth-of-type(4)": { bgcolor: "#c9c3ff" },
-      }}
-    >
-      <Box component="span" />
-      <Box component="span" />
-      <Box component="span" />
-      <Box component="span" />
-    </Box>
-  );
-}
+import goldShapeLogo from "../../../../../../assets/goldshape-logo.png";
 
 export function NotFoundView() {
   const navigate = useNavigate();
@@ -66,7 +35,7 @@ export function NotFoundView() {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, mb: 5 }}>
-          <BrandMark />
+          <img className="brand-mark" src={goldShapeLogo} alt="" width={44} height={44} />
           <Typography
             component="span"
             sx={{
@@ -83,7 +52,6 @@ export function NotFoundView() {
         <Typography
           component="p"
           sx={{
-            color: "#7463e8",
             fontSize: 13,
             fontWeight: 800,
             letterSpacing: "3px",
@@ -131,10 +99,10 @@ export function NotFoundView() {
               minHeight: 46,
               px: 2.5,
               borderRadius: "9px",
-              bgcolor: "#6c5ce7",
+              bgcolor: "#16a34a",
               fontWeight: 600,
               textTransform: "none",
-              "&:hover": { bgcolor: "#5949d0" },
+              "&:hover": { bgcolor: "#16a34a" },
             }}
           >
             Ir para o início
@@ -151,7 +119,6 @@ export function NotFoundView() {
               color: "#656b80",
               fontWeight: 600,
               textTransform: "none",
-              "&:hover": { borderColor: "#bdb5f4", bgcolor: "#f8f7ff" },
             }}
           >
             Voltar

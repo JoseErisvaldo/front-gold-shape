@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import goldShapeLogo from "../../../../assets/goldshape-logo.png";
 import type { AppSidebarConfig, SidebarNavigationItem } from "./sidebar-config";
 
 type AppSidebarProps = {
@@ -18,39 +19,6 @@ type AppSidebarProps = {
   onItemClick?: () => void;
   onAction?: (action: string) => void;
 };
-
-function BrandMark() {
-  return (
-    <Box
-      aria-hidden="true"
-      sx={{
-        width: 30,
-        height: 30,
-        display: "grid",
-        flexShrink: 0,
-        gridTemplateColumns: "repeat(2, 1fr)",
-        gridTemplateRows: "repeat(2, 1fr)",
-        gap: "3px",
-        p: "3px",
-        overflow: "hidden",
-        border: "1px solid",
-        borderColor: "rgba(116, 99, 232, 0.2)",
-        borderRadius: "10px",
-        background: "linear-gradient(145deg, #16A34A, #10a145)",
-        boxShadow: "0 5px 15px rgba(91, 75, 222, 0.2)",
-        transform: "rotate(-5deg)",
-        "& > span": { borderRadius: "2px", bgcolor: "#fff" },
-        "& > span:nth-of-type(2), & > span:nth-of-type(3)": { opacity: 0.68 },
-        "& > span:nth-of-type(4)": { bgcolor: "#16A34A" },
-      }}
-    >
-      <Box component="span" />
-      <Box component="span" />
-      <Box component="span" />
-      <Box component="span" />
-    </Box>
-  );
-}
 
 function NavigationItems({
   items,
@@ -124,7 +92,7 @@ function SidebarContents({
           pl: 0.6,
         }}
       >
-        <BrandMark />
+        <img className="brand-mark" src={goldShapeLogo} alt="" width={44} height={44} />
         <Typography
           component="span"
           sx={{
