@@ -9,6 +9,7 @@ import { ProductsListView } from "./modules/root/pages/features/products";
 import { CreateProductView } from "./modules/root/pages/features/products/views/create-product.view";
 import { StoresView } from "./modules/root/pages/features/store";
 import { ProfileView } from "./modules/root/pages/features/users";
+import { StorefrontView } from "./modules/root/pages/features-public/storefront";
 import { AppLayout } from "./shared/components/layout";
 import { queryClient } from "./shared/services/queries";
 import { useAuthStore } from "./shared/store";
@@ -46,7 +47,8 @@ function App() {
       <Toaster position="top-right" richColors />
 
       <Routes>
-        <Route path="/" element={<LoginRoute />} />
+        <Route path="/session" element={<LoginRoute />} />
+        <Route path="/" element={<StorefrontView />} />
         <Route element={<ProtectedHomeRoute />}>
           <Route element={<AuthenticatedLayout />}>
             <Route path="/home" element={<HomeView />} />
