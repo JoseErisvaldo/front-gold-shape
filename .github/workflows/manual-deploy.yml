@@ -103,6 +103,38 @@ jobs:
             --environment="$VERCEL_TARGET" \
             --token="$VERCEL_TOKEN"
 
+      - name: Set API URL for Vercel build
+        shell: bash
+        env:
+          API_URL: ${{ inputs.api_url }}
+          VERCEL_TARGET: ${{ inputs.environment == 'production' && 'production' || 'preview' }}
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from "node:fs";
+
+          const file = `.vercel/.env.${process.env.VERCEL_TARGET}.local`;
+          const apiUrl = process.env.API_URL.replace(/\/+$/, "");
+
+          const current = fs.existsSync(file)
+            ? fs.readFileSync(file, "utf8")
+            : "";
+
+          const lines = current
+            .split(/\r?\n/)
+            .filter((line) => !/^\s*(?:export\s+)?VITE_API_URL\s*=/.test(line));
+
+          while (lines.length && lines.at(-1) === "") {
+            lines.pop();
+          }
+
+          lines.push(`VITE_API_URL=${JSON.stringify(apiUrl)}`);
+
+          fs.writeFileSync(file, `${lines.join("\n")}\n`);
+
+          console.log(`VITE_API_URL configurada para: ${apiUrl}`);
+          console.log(`Arquivo utilizado: ${file}`);
+          NODE
+
       - name: Build frontend
         shell: bash
         env:
