@@ -54,7 +54,7 @@ function App() {
         <Route element={<ProtectedHomeRoute />}>
           <Route element={<AuthenticatedLayout />}>
             <Route path="/home" element={<HomeView />} />
-            <Route path="/store" element={<StoresView />} />
+            <Route path="/store-manage" element={<StoresView />} />
             <Route path="/categories" element={<CategoriesView />} />
             <Route path="/products" element={<ProductsListView />} />
             <Route path="/products/create" element={<CreateProductView />} />

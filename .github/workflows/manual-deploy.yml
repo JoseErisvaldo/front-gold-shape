@@ -1,0 +1,128 @@
+name: Manual Front Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Deployment environment
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      api_url:
+        description: Full API URL, without trailing slash
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: front-deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy front
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Validate deployment
+        env:
+          API_URL: ${{ inputs.api_url }}
+        run: |
+          if [[ ! "$API_URL" =~ ^https:// ]]; then
+            echo "API URL must start with https://"
+            exit 1
+          fi
+
+          if [ "${{ inputs.environment }}" = "production" ] &&
+             [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "Production deployments must use main."
+            exit 1
+          fi
+
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure Vercel project
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          mkdir -p .vercel
+          printf '{"orgId":"%s","projectId":"%s"}' \
+            "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" \
+            > .vercel/project.json
+
+      - name: Pull Vercel settings
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            npx vercel pull --yes --environment=production \
+              --token="$VERCEL_TOKEN"
+          else
+            npx vercel pull --yes --environment=preview \
+              --token="$VERCEL_TOKEN"
+          fi
+
+      - name: Build front
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VITE_API_URL: ${{ inputs.api_url }}
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            npx vercel build --prod --token="$VERCEL_TOKEN"
+          else
+            npx vercel build --token="$VERCEL_TOKEN"
+          fi
+
+      - name: Deploy front to Vercel
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        run: |
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            DEPLOYMENT=$(npx vercel deploy --prebuilt --prod --yes \
+              --token="$VERCEL_TOKEN" --scope="$VERCEL_ORG_ID" --json)
+          else
+            DEPLOYMENT=$(npx vercel deploy --prebuilt --yes \
+              --token="$VERCEL_TOKEN" --scope="$VERCEL_ORG_ID" --json)
+          fi
+
+          URL=$(echo "$DEPLOYMENT" | jq -r '.url // empty')
+
+          if [ -z "$URL" ]; then
+            echo "Could not retrieve deployment URL."
+            echo "$DEPLOYMENT"
+            exit 1
+          fi
+
+          echo "url=https://$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Deployment summary
+        env:
+          FRONT_URL: ${{ steps.deploy.outputs.url }}
+          API_URL: ${{ inputs.api_url }}
+        run: |
+          {
+            echo "## Front Deployment"
+            echo ""
+            echo "- Environment: ${{ inputs.environment }}"
+            echo "- Branch: $GITHUB_REF_NAME"
+            echo "- Front URL: $FRONT_URL"
+            echo "- API URL: $API_URL"
+          } >> "$GITHUB_STEP_SUMMARY"

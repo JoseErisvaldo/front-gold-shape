@@ -32,7 +32,7 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
     },
     {
       label: "Loja",
-      to: "/store",
+      to: "/store-manage",
       icon: <StoreIcon fontSize="small" />,
     },
     {
