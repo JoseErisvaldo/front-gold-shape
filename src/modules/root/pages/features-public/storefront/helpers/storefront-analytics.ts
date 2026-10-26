@@ -10,7 +10,6 @@ export function toSlug(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-// Em desenvolvimento, mostra no console tudo que é enviado ao PostHog.
 function debugLog(name: string, properties: unknown) {
   if (!import.meta.env.DEV) return;
 
@@ -87,6 +86,10 @@ type StorefrontEvents = {
     term_length: number;
     sort: string;
     only_on_sale: boolean;
+  };
+  // Cliente abriu o perfil da loja.
+  store_profile_opened: {
+    source: "home_card" | "header";
   };
 };
 

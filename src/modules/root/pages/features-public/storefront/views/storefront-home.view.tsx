@@ -16,6 +16,8 @@ import type { PublicProduct } from "../types/storefront.types";
 
 type StorefrontHomeViewProps = {
   onProductClick: (productId: string) => void;
+  onStoreClick: () => void;
+  logoSrc?: string;
 };
 
 export function StorefrontHomeView({ onProductClick }: StorefrontHomeViewProps) {
@@ -123,7 +125,10 @@ export function StorefrontHomeView({ onProductClick }: StorefrontHomeViewProps) 
         {hasProducts && (
           <Box
             aria-busy={isPlaceholderData}
-            sx={{ opacity: isPlaceholderData ? 0.6 : 1, transition: "opacity .15s" }}
+            sx={{
+              opacity: isPlaceholderData ? 0.6 : 1,
+              transition: "opacity .15s",
+            }}
           >
             <ProductsGrid>
               {products.map((product) => (

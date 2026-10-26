@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import { trackPageview } from "../helpers/storefront-analytics";
 
-type StorefrontRoute = { page: "home" } | { page: "product"; productId: string };
+type TrackedRoute = { page: "home" | "store" | "product" };
 
-export function useStorefrontPageTracking(route: StorefrontRoute) {
+export function useStorefrontPageTracking(route: TrackedRoute) {
   const isHome = route.page === "home";
   const lastTrackedPage = useRef<string | null>(null);
 

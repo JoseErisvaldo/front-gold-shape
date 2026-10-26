@@ -1,6 +1,8 @@
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import { Avatar, Badge, Box, ButtonBase, IconButton, Skeleton, Typography } from "@mui/material";
-import { getStoreInitials } from "../../helpers/store-initials";
+import StorefrontOutlinedIcon from "@mui/icons-material/StorefrontOutlined";
+import { Badge, Box, ButtonBase, IconButton, Skeleton, Tooltip, Typography } from "@mui/material";
+import goldShapeLogo from "../../../../../../../assets/goldshape-logo.png";
+import { trackEvent } from "../../helpers/storefront-analytics";
 
 type StorefrontHeaderProps = {
   storeName: string;
@@ -8,17 +10,25 @@ type StorefrontHeaderProps = {
   logoSrc?: string;
   itemsCount: number;
   onHomeClick: () => void;
+  onStoreClick: () => void;
   onCartClick: () => void;
 };
+
+const ICON_BUTTON_SX = { width: 44, height: 44, color: "#292D45" } as const;
 
 export function StorefrontHeader({
   storeName,
   isStoreLoading,
-  logoSrc,
   itemsCount,
   onHomeClick,
+  onStoreClick,
   onCartClick,
 }: StorefrontHeaderProps) {
+  const handleStoreClick = () => {
+    trackEvent("store_profile_opened", { source: "header" });
+    onStoreClick();
+  };
+
   return (
     <Box
       component="header"
@@ -49,13 +59,8 @@ export function StorefrontHeader({
           aria-label={`${storeName || "Loja"}, ir para o início`}
           sx={{ gap: 1.5, borderRadius: "12px", textAlign: "left" }}
         >
-          <Avatar
-            src={logoSrc}
-            alt=""
-            sx={{ width: 42, height: 42, color: "#0F301B", bgcolor: "#A8D14A", fontWeight: 800 }}
-          >
-            {getStoreInitials(storeName)}
-          </Avatar>
+          <img className="brand-mark" src={goldShapeLogo} alt="" width={44} height={44} />
+
           {isStoreLoading ? (
             <Skeleton width={110} height={26} />
           ) : (
@@ -72,21 +77,37 @@ export function StorefrontHeader({
           )}
         </ButtonBase>
 
-        <IconButton
-          aria-label={`Abrir carrinho, ${itemsCount} ${itemsCount === 1 ? "item" : "itens"}`}
-          onClick={onCartClick}
-          sx={{ width: 44, height: 44, color: "#292D45" }}
-        >
-          <Badge
-            badgeContent={itemsCount}
-            max={99}
-            sx={{
-              "& .MuiBadge-badge": { color: "#FFFFFF", bgcolor: "#F58A33", fontWeight: 700 },
-            }}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <Tooltip title="Sobre a loja">
+            <IconButton
+              aria-label="Ver perfil da loja"
+              onClick={handleStoreClick}
+              sx={ICON_BUTTON_SX}
+            >
+              <StorefrontOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+
+          <IconButton
+            aria-label={`Abrir carrinho, ${itemsCount} ${itemsCount === 1 ? "item" : "itens"}`}
+            onClick={onCartClick}
+            sx={ICON_BUTTON_SX}
           >
-            <ShoppingBagOutlinedIcon />
-          </Badge>
-        </IconButton>
+            <Badge
+              badgeContent={itemsCount}
+              max={99}
+              sx={{
+                "& .MuiBadge-badge": {
+                  color: "#FFFFFF",
+                  bgcolor: "#F58A33",
+                  fontWeight: 700,
+                },
+              }}
+            >
+              <ShoppingBagOutlinedIcon />
+            </Badge>
+          </IconButton>
+        </Box>
       </Box>
     </Box>
   );

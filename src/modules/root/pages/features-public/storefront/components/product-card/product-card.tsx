@@ -98,7 +98,7 @@ export function ProductCard({ product, onClick, onQuickAdd }: ProductCardProps) 
                 fontSize: 12,
                 fontWeight: 700,
                 color: "#FFFFFF",
-                bgcolor: "#F58A33",
+                bgcolor: "green",
               }}
             />
           )}
@@ -157,9 +157,20 @@ export function ProductCard({ product, onClick, onQuickAdd }: ProductCardProps) 
               <Typography sx={{ minHeight: 14, color: "#858A9D", fontSize: 11 }}>
                 {pricing.hasMultiplePrices ? "A partir de" : ""}
               </Typography>
-              <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", columnGap: 1 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  alignItems: "baseline",
+                  columnGap: 1,
+                }}
+              >
                 <Typography
-                  sx={{ color: "#292D45", fontSize: { xs: 17, sm: 19 }, fontWeight: 800 }}
+                  sx={{
+                    color: "#292D45",
+                    fontSize: { xs: 17, sm: 19 },
+                    fontWeight: 800,
+                  }}
                 >
                   {formatPrice(pricing.price)}
                 </Typography>

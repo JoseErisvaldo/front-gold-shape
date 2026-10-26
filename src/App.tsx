@@ -9,6 +9,7 @@ import { ProductsListView } from "./modules/root/pages/features/products";
 import { CreateProductView } from "./modules/root/pages/features/products/views/create-product.view";
 import { StoresView } from "./modules/root/pages/features/store";
 import { ProfileView } from "./modules/root/pages/features/users";
+import { StoreProfileView } from "./modules/root/pages/features-public/store-profile";
 import { StorefrontView } from "./modules/root/pages/features-public/storefront";
 import { AppLayout } from "./shared/components/layout";
 import { queryClient } from "./shared/services/queries";
@@ -23,7 +24,7 @@ function LoginRoute() {
 function ProtectedHomeRoute() {
   const session = useAuthStore((state) => state.session);
 
-  if (!session) return <Navigate to="/" replace />;
+  if (!session) return <Navigate to="/session" replace />;
 
   return <Outlet />;
 }
@@ -49,6 +50,7 @@ function App() {
       <Routes>
         <Route path="/session" element={<LoginRoute />} />
         <Route path="/" element={<StorefrontView />} />
+        <Route path="/store" element={<StoreProfileView />} />
         <Route element={<ProtectedHomeRoute />}>
           <Route element={<AuthenticatedLayout />}>
             <Route path="/home" element={<HomeView />} />
