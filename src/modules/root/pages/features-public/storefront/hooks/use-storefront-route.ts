@@ -1,46 +1,48 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
-export type StorefrontRoute = { page: "home" } | { page: "product"; productId: string };
+export type StorefrontRoute =
+  | { page: "home" }
+  | { page: "store" }
+  | { page: "product"; productId: string };
 
 function parseHash(hash: string): StorefrontRoute {
-  const match = hash.match(/^#\/produto\/([^/?#]+)/);
-  return match ? { page: "product", productId: decodeURIComponent(match[1]) } : { page: "home" };
+  const path = hash.replace(/^#/, "");
+
+  const productMatch = path.match(/^\/produto\/([^/?#]+)/);
+  if (productMatch) {
+    return { page: "product", productId: decodeURIComponent(productMatch[1]) };
+  }
+
+  if (/^\/loja\/?$/.test(path)) return { page: "store" };
+
+  return { page: "home" };
 }
 
+function subscribe(callback: () => void) {
+  window.addEventListener("hashchange", callback);
+  return () => window.removeEventListener("hashchange", callback);
+}
+
+const getSnapshot = () => window.location.hash;
+const getServerSnapshot = () => "";
+
 export function useStorefrontRoute() {
-  const [route, setRoute] = useState<StorefrontRoute>(() => parseHash(window.location.hash));
-  const routeRef = useRef(route);
-  const savedScrollRef = useRef(0);
+  const hash = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const route = parseHash(hash);
 
-  useEffect(() => {
-    const handleHashChange = () => {
-      const next = parseHash(window.location.hash);
-
-      if (routeRef.current.page === "home" && next.page === "product") {
-        savedScrollRef.current = window.scrollY;
-      }
-
-      routeRef.current = next;
-      setRoute(next);
-    };
-
-    window.addEventListener("hashchange", handleHashChange);
-    return () => window.removeEventListener("hashchange", handleHashChange);
+  const goToHome = useCallback(() => {
+    window.location.hash = "#/";
   }, []);
 
-  useLayoutEffect(() => {
-    window.scrollTo({
-      top: route.page === "home" ? savedScrollRef.current : 0,
-    });
-  }, [route]);
+  const goToProduct = useCallback((productId: string) => {
+    window.location.hash = `#/produto/${encodeURIComponent(productId)}`;
+    window.scrollTo({ top: 0 });
+  }, []);
 
-  return {
-    route,
-    goToProduct: (productId: string) => {
-      window.location.hash = `/produto/${productId}`;
-    },
-    goToHome: () => {
-      window.location.hash = "/";
-    },
-  };
+  const goToStore = useCallback(() => {
+    window.location.hash = "#/loja";
+    window.scrollTo({ top: 0 });
+  }, []);
+
+  return { route, goToHome, goToProduct, goToStore };
 }

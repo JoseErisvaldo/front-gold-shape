@@ -9,10 +9,16 @@ import { WhatsAppFab } from "../whatsapp-fab/whatsapp-fab";
 type StorefrontLayoutProps = {
   logoSrc?: string;
   onHomeClick: () => void;
+  onStoreClick: () => void;
   children: ReactNode;
 };
 
-export function StorefrontLayout({ logoSrc, onHomeClick, children }: StorefrontLayoutProps) {
+export function StorefrontLayout({
+  children,
+  logoSrc,
+  onHomeClick,
+  onStoreClick,
+}: StorefrontLayoutProps) {
   const {
     storeName,
     isStoreLoading,
@@ -40,6 +46,7 @@ export function StorefrontLayout({ logoSrc, onHomeClick, children }: StorefrontL
         logoSrc={logoSrc}
         itemsCount={itemsCount}
         onHomeClick={onHomeClick}
+        onStoreClick={onStoreClick}
         onCartClick={openCart}
       />
 
