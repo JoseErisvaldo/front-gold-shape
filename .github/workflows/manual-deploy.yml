@@ -48,6 +48,11 @@ jobs:
             exit 1
           fi
 
+          if [[ "$API_URL" == *"/public/"* ]]; then
+            echo "::error::API_URL must be the API base URL, without endpoint paths."
+            exit 1
+          fi
+
           for SECRET_NAME in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
             if [ -z "${!SECRET_NAME}" ]; then
               echo "::error::$SECRET_NAME is missing in the $DEPLOY_ENVIRONMENT environment."
@@ -121,24 +126,27 @@ jobs:
 
           const lines = current
             .split(/\r?\n/)
-            .filter((line) => !/^\s*(?:export\s+)?VITE_API_URL\s*=/.test(line));
+            .filter(
+              (line) =>
+                !/^\s*(?:export\s+)?VITE_API_BASE_URL\s*=/.test(line)
+            );
 
           while (lines.length && lines.at(-1) === "") {
             lines.pop();
           }
 
-          lines.push(`VITE_API_URL=${JSON.stringify(apiUrl)}`);
+          lines.push(`VITE_API_BASE_URL=${JSON.stringify(apiUrl)}`);
 
           fs.writeFileSync(file, `${lines.join("\n")}\n`);
 
-          console.log(`VITE_API_URL configurada para: ${apiUrl}`);
+          console.log(`VITE_API_BASE_URL configurada para: ${apiUrl}`);
           console.log(`Arquivo utilizado: ${file}`);
           NODE
 
       - name: Build frontend
         shell: bash
         env:
-          VITE_API_URL: ${{ inputs.api_url }}
+          VITE_API_BASE_URL: ${{ inputs.api_url }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
         run: |
