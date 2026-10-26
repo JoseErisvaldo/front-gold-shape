@@ -1,4 +1,4 @@
-name: Manual Front Deploy
+name: Manual Frontend Deploy
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
           - staging
           - production
       api_url:
-        description: Full API URL, without trailing slash
+        description: API base URL (HTTPS)
         required: true
         type: string
 
@@ -19,110 +19,146 @@ permissions:
   contents: read
 
 concurrency:
-  group: front-deploy-${{ inputs.environment }}
+  group: frontend-deploy-${{ inputs.environment }}
   cancel-in-progress: false
 
 jobs:
   deploy:
-    name: Build and deploy front
+    name: Build and deploy frontend
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
     steps:
-      - name: Validate deployment
+      - name: Validate deployment configuration
+        shell: bash
         env:
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
           API_URL: ${{ inputs.api_url }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          if [[ ! "$API_URL" =~ ^https:// ]]; then
-            echo "API URL must start with https://"
+          if [ "$DEPLOY_ENVIRONMENT" = "production" ] && [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::Production deployments must use the main branch."
             exit 1
           fi
 
-          if [ "${{ inputs.environment }}" = "production" ] &&
-             [ "$GITHUB_REF" != "refs/heads/main" ]; then
-            echo "Production deployments must use main."
+          if [[ ! "$API_URL" =~ ^https://[^[:space:]]+$ ]]; then
+            echo "::error::API_URL must be a valid HTTPS URL."
             exit 1
           fi
+
+          for SECRET_NAME in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!SECRET_NAME}" ]; then
+              echo "::error::$SECRET_NAME is missing in the $DEPLOY_ENVIRONMENT environment."
+              exit 1
+            fi
+          done
 
       - name: Checkout selected branch
         uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Configure Vercel project
+        shell: bash
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           mkdir -p .vercel
+
           printf '{"orgId":"%s","projectId":"%s"}' \
-            "$VERCEL_ORG_ID" "$VERCEL_PROJECT_ID" \
+            "$VERCEL_ORG_ID" \
+            "$VERCEL_PROJECT_ID" \
             > .vercel/project.json
 
-      - name: Pull Vercel settings
+      - name: Pull Vercel project settings
+        shell: bash
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_TARGET: ${{ inputs.environment == 'production' && 'production' || 'preview' }}
         run: |
-          if [ "${{ inputs.environment }}" = "production" ]; then
-            npx vercel pull --yes --environment=production \
-              --token="$VERCEL_TOKEN"
-          else
-            npx vercel pull --yes --environment=preview \
-              --token="$VERCEL_TOKEN"
-          fi
+          pnpm dlx vercel@latest pull \
+            --yes \
+            --environment="$VERCEL_TARGET" \
+            --token="$VERCEL_TOKEN"
 
-      - name: Build front
+      - name: Build frontend
+        shell: bash
         env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VITE_API_URL: ${{ inputs.api_url }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
         run: |
-          if [ "${{ inputs.environment }}" = "production" ]; then
-            npx vercel build --prod --token="$VERCEL_TOKEN"
+          if [ "$DEPLOY_ENVIRONMENT" = "production" ]; then
+            pnpm dlx vercel@latest build --prod --token="$VERCEL_TOKEN"
           else
-            npx vercel build --token="$VERCEL_TOKEN"
+            pnpm dlx vercel@latest build --token="$VERCEL_TOKEN"
           fi
 
-      - name: Deploy front to Vercel
+      - name: Deploy frontend to Vercel
         id: deploy
+        shell: bash
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
         run: |
-          if [ "${{ inputs.environment }}" = "production" ]; then
-            DEPLOYMENT=$(npx vercel deploy --prebuilt --prod --yes \
-              --token="$VERCEL_TOKEN" --scope="$VERCEL_ORG_ID" --json)
+          if [ "$DEPLOY_ENVIRONMENT" = "production" ]; then
+            DEPLOYMENT=$(pnpm dlx vercel@latest deploy \
+              --prebuilt \
+              --prod \
+              --yes \
+              --token="$VERCEL_TOKEN" \
+              --json)
           else
-            DEPLOYMENT=$(npx vercel deploy --prebuilt --yes \
-              --token="$VERCEL_TOKEN" --scope="$VERCEL_ORG_ID" --json)
+            DEPLOYMENT=$(pnpm dlx vercel@latest deploy \
+              --prebuilt \
+              --yes \
+              --token="$VERCEL_TOKEN" \
+              --json)
           fi
 
           URL=$(echo "$DEPLOYMENT" | jq -r '.url // empty')
 
           if [ -z "$URL" ]; then
-            echo "Could not retrieve deployment URL."
+            echo "::error::Could not retrieve the deployment URL."
             echo "$DEPLOYMENT"
             exit 1
           fi
 
-          echo "url=https://$URL" >> "$GITHUB_OUTPUT"
+          case "$URL" in
+            https://*) ;;
+            *) URL="https://$URL" ;;
+          esac
+
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
 
       - name: Deployment summary
+        shell: bash
         env:
-          FRONT_URL: ${{ steps.deploy.outputs.url }}
           API_URL: ${{ inputs.api_url }}
+          FRONTEND_URL: ${{ steps.deploy.outputs.url }}
+          DEPLOY_ENVIRONMENT: ${{ inputs.environment }}
         run: |
           {
-            echo "## Front Deployment"
+            echo "## Frontend Deployment"
             echo ""
-            echo "- Environment: ${{ inputs.environment }}"
+            echo "- Environment: $DEPLOY_ENVIRONMENT"
             echo "- Branch: $GITHUB_REF_NAME"
-            echo "- Front URL: $FRONT_URL"
+            echo "- Commit: $GITHUB_SHA"
+            echo "- Frontend URL: $FRONTEND_URL"
             echo "- API URL: $API_URL"
           } >> "$GITHUB_STEP_SUMMARY"
