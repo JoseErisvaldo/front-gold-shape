@@ -1,6 +1,6 @@
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { Alert, Box, Button, Stack } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { trackPageview } from "../../storefront/helpers/storefront-analytics";
 import { StoreProfileCard } from "../components/store-profile-card/store-profile-card";
 import { StoreProfileSkeleton } from "../components/store-profile-skeleton/store-profile-skeleton";
@@ -24,7 +24,12 @@ export function StoreProfileView({ logoSrc, onBack }: StoreProfileViewProps) {
     mapsUrl,
   } = useStoreProfilePage();
 
+  const hasTrackedPageview = useRef(false);
+
   useEffect(() => {
+    if (hasTrackedPageview.current) return;
+
+    hasTrackedPageview.current = true;
     trackPageview("/loja");
   }, []);
 

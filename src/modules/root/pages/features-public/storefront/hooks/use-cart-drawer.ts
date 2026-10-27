@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { buildWhatsAppOrder, buildWhatsAppUrl } from "../helpers/build-whatsapp";
 import { trackEvent, trackPageview } from "../helpers/storefront-analytics";
@@ -43,26 +43,32 @@ export function useCartDrawer({ storeName, whatsapp }: UseCartDrawerOptions) {
   const deliveryFee = delivery.area?.fee ?? 0;
   const total = subtotal + deliveryFee;
 
-  const productNames = items.map((item) =>
-    item.variantLabel ? `${item.productName} (${item.variantLabel})` : item.productName,
+  const productNames = useMemo(
+    () =>
+      items.map((item) =>
+        item.variantLabel ? `${item.productName} (${item.variantLabel})` : item.productName,
+      ),
+    [items],
   );
 
-  useEffect(() => {
-    if (!isOpen || items.length === 0) {
-      setStep("cart");
-    }
-  }, [isOpen, items.length]);
+  const hasItems = items.length > 0;
+  const shouldTrackStep = isOpen && hasItems;
 
   useEffect(() => {
-    if (!isOpen || items.length === 0) return;
+    if (!shouldTrackStep) return;
 
     trackPageview(STEP_PATHS[step]);
+  }, [shouldTrackStep, step]);
+
+  useEffect(() => {
+    if (!shouldTrackStep) return;
+
     trackEvent("cart_step_viewed", {
       step,
       items_count: itemsCount,
       products: productNames,
     });
-  }, [isOpen, step, items.length, itemsCount, productNames]);
+  }, [shouldTrackStep, step, itemsCount, productNames]);
 
   const goToCart = () => setStep("cart");
 
