@@ -8,36 +8,20 @@ import { buildDashboardSections } from "../helpers/build-dashboard-sections";
 import { useDashboardQuery } from "../queries/use-dashboard-query";
 
 export function DashboardView() {
-  const {
-    data: totals,
-    isPending,
-    isError,
-    isFetching,
-    refetch,
-  } = useDashboardQuery();
+  const { data: totals, isPending, isError, isFetching, refetch } = useDashboardQuery();
 
   const sections = totals ? buildDashboardSections(totals) : [];
 
   return (
     <PageLayout
-      header={
-        <DashboardHeader
-          isRefreshing={isFetching}
-          onRefreshClick={() => refetch()}
-        />
-      }
+      header={<DashboardHeader isRefreshing={isFetching} onRefreshClick={() => refetch()} />}
     >
       {isError && (
         <Alert
           severity="error"
           sx={{ mb: 3 }}
           action={
-            <Button
-              color="inherit"
-              size="small"
-              onClick={() => refetch()}
-              disabled={isFetching}
-            >
+            <Button color="inherit" size="small" onClick={() => refetch()} disabled={isFetching}>
               {isFetching ? "Carregando..." : "Tentar novamente"}
             </Button>
           }
@@ -49,12 +33,7 @@ export function DashboardView() {
       {isPending && <DashboardSkeleton />}
 
       {sections.map((section) => (
-        <Box
-          key={section.id}
-          component="section"
-          aria-label={section.title}
-          sx={{ mb: 4 }}
-        >
+        <Box key={section.id} component="section" aria-label={section.title} sx={{ mb: 4 }}>
           <SectionTitle title={section.title} />
 
           <Box

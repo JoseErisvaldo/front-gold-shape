@@ -1,11 +1,11 @@
 import CategoriesIcon from "@mui/icons-material/CategoryRounded";
+import DashboardIcon from "@mui/icons-material/DashboardRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ProductIcon from "@mui/icons-material/Inventory2Rounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import Profiles from "@mui/icons-material/PeopleRounded";
 import ProfileIcon from "@mui/icons-material/PersonRounded";
 import StoreIcon from "@mui/icons-material/StoreRounded";
-import DashboardIcon from "@mui/icons-material/DashboardRounded";
 import type { ReactNode } from "react";
 
 export type SidebarNavigationItem = {

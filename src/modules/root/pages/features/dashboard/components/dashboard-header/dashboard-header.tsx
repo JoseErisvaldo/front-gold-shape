@@ -7,10 +7,7 @@ type DashboardHeaderProps = {
   onRefreshClick: () => void;
 };
 
-export function DashboardHeader({
-  isRefreshing,
-  onRefreshClick,
-}: DashboardHeaderProps) {
+export function DashboardHeader({ isRefreshing, onRefreshClick }: DashboardHeaderProps) {
   return (
     <Box
       sx={{
@@ -34,9 +31,7 @@ export function DashboardHeader({
         startIcon={
           <RefreshRoundedIcon
             sx={{
-              animation: isRefreshing
-                ? "dashboardSpin 1s linear infinite"
-                : "none",
+              animation: isRefreshing ? "dashboardSpin 1s linear infinite" : "none",
               "@keyframes dashboardSpin": {
                 to: { transform: "rotate(360deg)" },
               },
