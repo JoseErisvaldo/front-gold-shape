@@ -5,6 +5,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import Profiles from "@mui/icons-material/PeopleRounded";
 import ProfileIcon from "@mui/icons-material/PersonRounded";
 import StoreIcon from "@mui/icons-material/StoreRounded";
+import DashboardIcon from "@mui/icons-material/DashboardRounded";
 import type { ReactNode } from "react";
 
 export type SidebarNavigationItem = {
@@ -32,9 +33,9 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
       icon: <HomeRoundedIcon fontSize="small" />,
     },
     {
-      label: "Loja",
-      to: "/store-manage",
-      icon: <StoreIcon fontSize="small" />,
+      label: "Dashboard",
+      to: "/dashboard",
+      icon: <DashboardIcon fontSize="small" />,
     },
     {
       label: "Categorias",
@@ -55,6 +56,11 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
       label: "Usuários",
       to: "/list-users",
       icon: <Profiles fontSize="small" />,
+    },
+    {
+      label: "Loja",
+      to: "/store-manage",
+      icon: <StoreIcon fontSize="small" />,
     },
     {
       label: "Perfil",

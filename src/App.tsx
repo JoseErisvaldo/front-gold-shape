@@ -1,4 +1,10 @@
-import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+} from "react-router-dom";
 import { Toaster } from "sonner";
 import { LoginView } from "./modules/root/pages/features/auth";
 import { CategoriesView } from "./modules/root/pages/features/categories";
@@ -15,6 +21,7 @@ import { StorefrontView } from "./modules/root/pages/features-public/storefront"
 import { AppLayout } from "./shared/components/layout";
 import { queryClient } from "./shared/services/queries";
 import { useAuthStore } from "./shared/store";
+import { DashboardView } from "./modules/root/pages/features/dashboard";
 
 function LoginRoute() {
   const session = useAuthStore((state) => state.session);
@@ -55,6 +62,7 @@ function App() {
         <Route element={<ProtectedHomeRoute />}>
           <Route element={<AuthenticatedLayout />}>
             <Route path="/home" element={<HomeView />} />
+            <Route path="/dashboard" element={<DashboardView />} />
             <Route path="/store-manage" element={<StoresView />} />
             <Route path="/categories" element={<CategoriesView />} />
             <Route path="/products" element={<ProductsListView />} />
