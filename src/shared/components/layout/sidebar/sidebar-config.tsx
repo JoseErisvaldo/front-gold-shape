@@ -1,4 +1,5 @@
 import CategoriesIcon from "@mui/icons-material/CategoryRounded";
+import DashboardIcon from "@mui/icons-material/DashboardRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ProductIcon from "@mui/icons-material/Inventory2Rounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
@@ -32,9 +33,9 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
       icon: <HomeRoundedIcon fontSize="small" />,
     },
     {
-      label: "Loja",
-      to: "/store-manage",
-      icon: <StoreIcon fontSize="small" />,
+      label: "Dashboard",
+      to: "/dashboard",
+      icon: <DashboardIcon fontSize="small" />,
     },
     {
       label: "Categorias",
@@ -55,6 +56,11 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
       label: "Usuários",
       to: "/list-users",
       icon: <Profiles fontSize="small" />,
+    },
+    {
+      label: "Loja",
+      to: "/store-manage",
+      icon: <StoreIcon fontSize="small" />,
     },
     {
       label: "Perfil",

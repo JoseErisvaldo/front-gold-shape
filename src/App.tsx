@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes } from "react-router-dom
 import { Toaster } from "sonner";
 import { LoginView } from "./modules/root/pages/features/auth";
 import { CategoriesView } from "./modules/root/pages/features/categories";
+import { DashboardView } from "./modules/root/pages/features/dashboard";
 import { DeliveryAreasListView } from "./modules/root/pages/features/delivery-areas";
 import { HomeView } from "./modules/root/pages/features/home";
 import { ListUsersView } from "./modules/root/pages/features/list-users";
@@ -55,6 +56,7 @@ function App() {
         <Route element={<ProtectedHomeRoute />}>
           <Route element={<AuthenticatedLayout />}>
             <Route path="/home" element={<HomeView />} />
+            <Route path="/dashboard" element={<DashboardView />} />
             <Route path="/store-manage" element={<StoresView />} />
             <Route path="/categories" element={<CategoriesView />} />
             <Route path="/products" element={<ProductsListView />} />
