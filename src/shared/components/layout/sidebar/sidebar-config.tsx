@@ -5,6 +5,7 @@ import ProductIcon from "@mui/icons-material/Inventory2Rounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import Profiles from "@mui/icons-material/PeopleRounded";
 import ProfileIcon from "@mui/icons-material/PersonRounded";
+import OrdersIcon from "@mui/icons-material/ReceiptLongRounded";
 import StoreIcon from "@mui/icons-material/StoreRounded";
 import type { ReactNode } from "react";
 
@@ -46,6 +47,11 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
       label: "Produtos",
       to: "/products",
       icon: <ProductIcon fontSize="small" />,
+    },
+    {
+      label: "Pedidos",
+      to: "/orders",
+      icon: <OrdersIcon fontSize="small" />,
     },
     {
       label: "Áreas de entrega",

@@ -1,10 +1,10 @@
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import LocalShippingRoundedIcon from "@mui/icons-material/LocalShippingRounded";
+import PaymentRoundedIcon from "@mui/icons-material/PaymentRounded";
 import ReceiptLongRoundedIcon from "@mui/icons-material/ReceiptLongRounded";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { Box, Button, Drawer, IconButton, Typography } from "@mui/material";
+import { Alert, Box, Button, Drawer, IconButton, Typography } from "@mui/material";
 import { formatPrice } from "../../helpers/format-price";
 import { useCartDrawer } from "../../hooks/use-cart-drawer";
 import { CartItemRow } from "../cart-item-row/cart-item-row";
@@ -14,8 +14,6 @@ import { OrderReview } from "../order-review/order-review";
 type CartDrawerProps = {
   open: boolean;
   onClose: () => void;
-  storeName: string;
-  whatsapp: string | null;
 };
 
 const PRIMARY_BUTTON_SX = {
@@ -28,7 +26,7 @@ const PRIMARY_BUTTON_SX = {
   "&:hover": { bgcolor: "#15803D" },
 } as const;
 
-export function CartDrawer({ open, onClose, storeName, whatsapp }: CartDrawerProps) {
+export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const {
     step,
     goToDelivery,
@@ -49,9 +47,10 @@ export function CartDrawer({ open, onClose, storeName, whatsapp }: CartDrawerPro
     canContinue,
     canReview,
     canCheckout,
+    isCheckoutLoading,
     checkout,
     deliveryForm,
-  } = useCartDrawer({ storeName, whatsapp });
+  } = useCartDrawer();
 
   const isEmpty = items.length === 0;
   const isDeliveryStep = step === "delivery" && !isEmpty;
@@ -215,12 +214,18 @@ export function CartDrawer({ open, onClose, storeName, whatsapp }: CartDrawerPro
                     disableElevation
                     variant="contained"
                     disabled={!canCheckout}
-                    startIcon={<WhatsAppIcon />}
+                    startIcon={<PaymentRoundedIcon />}
                     onClick={checkout}
                     sx={PRIMARY_BUTTON_SX}
                   >
-                    Enviar pedido pelo WhatsApp
+                    {isCheckoutLoading ? "Gerando pagamento..." : "Pagar com InfinitePay"}
                   </Button>
+
+                  {isFeeToAgree ? (
+                    <Alert severity="info" sx={{ mt: 1.5, borderRadius: "10px" }}>
+                      Para pagar online, escolha um bairro cadastrado para calcular a entrega.
+                    </Alert>
+                  ) : null}
 
                   <Typography
                     sx={{
@@ -231,7 +236,7 @@ export function CartDrawer({ open, onClose, storeName, whatsapp }: CartDrawerPro
                       textAlign: "center",
                     }}
                   >
-                    A entrega será agendada com a loja pelo WhatsApp.
+                    Você será direcionado ao checkout seguro da InfinitePay.
                   </Typography>
                 </>
               ) : isDeliveryStep ? (

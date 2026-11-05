@@ -19,16 +19,8 @@ export function StorefrontLayout({
   onHomeClick,
   onStoreClick,
 }: StorefrontLayoutProps) {
-  const {
-    storeName,
-    isStoreLoading,
-    whatsapp,
-    whatsappUrl,
-    itemsCount,
-    isCartOpen,
-    openCart,
-    closeCart,
-  } = useStorefrontLayout();
+  const { storeName, isStoreLoading, whatsappUrl, itemsCount, isCartOpen, openCart, closeCart } =
+    useStorefrontLayout();
 
   return (
     <Box
@@ -66,7 +58,7 @@ export function StorefrontLayout({
 
       <StorefrontFooter storeName={storeName} whatsappUrl={whatsappUrl} />
 
-      <CartDrawer open={isCartOpen} onClose={closeCart} storeName={storeName} whatsapp={whatsapp} />
+      <CartDrawer open={isCartOpen} onClose={closeCart} />
 
       {whatsappUrl && <WhatsAppFab href={whatsappUrl} />}
     </Box>

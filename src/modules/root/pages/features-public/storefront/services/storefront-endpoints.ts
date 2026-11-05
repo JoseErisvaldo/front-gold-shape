@@ -5,4 +5,6 @@ export const storefrontEndpoints = {
   store: "/public/store",
   deliveryAreas: "/public/delivery-areas",
   deliveryArea: (areaId: string) => `/public/delivery-areas/${areaId}`,
+  checkout: "/public/checkout",
+  confirmCheckout: "/public/checkout/confirm",
 } as const;

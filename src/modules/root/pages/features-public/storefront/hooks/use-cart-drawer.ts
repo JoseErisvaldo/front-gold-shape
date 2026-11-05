@@ -1,15 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { buildWhatsAppOrder, buildWhatsAppUrl } from "../helpers/build-whatsapp";
 import { trackEvent, trackPageview } from "../helpers/storefront-analytics";
+import { createCheckoutService } from "../services/create-checkout.service";
 import { useCartStore } from "../store/cart.store";
 import { useCartSummary } from "./use-cart-summary";
 import { useDeliveryForm } from "./use-delivery-form";
-
-type UseCartDrawerOptions = {
-  storeName: string;
-  whatsapp: string | null;
-};
 
 export type CartDrawerStep = "cart" | "delivery" | "review";
 
@@ -19,18 +14,18 @@ const STEP_PATHS: Record<CartDrawerStep, string> = {
   review: "/carrinho/revisao",
 };
 
-export function useCartDrawer({ storeName, whatsapp }: UseCartDrawerOptions) {
+export function useCartDrawer() {
   const { items, itemsCount, subtotal } = useCartSummary();
   const setQuantity = useCartStore((state) => state.setQuantity);
   const removeItem = useCartStore((state) => state.removeItem);
   const clear = useCartStore((state) => state.clear);
-  const closeCart = useCartStore((state) => state.closeCart);
   const isOpen = useCartStore((state) => state.isOpen);
 
   const [step, setStep] = useState<CartDrawerStep>("cart");
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
 
   const deliveryForm = useDeliveryForm();
-  const { delivery, isValid: isDeliveryValid, reset: resetDelivery } = deliveryForm;
+  const { delivery, isValid: isDeliveryValid } = deliveryForm;
 
   const originalSubtotal = items.reduce(
     (sum, item) => sum + Math.max(item.originalPrice, item.unitPrice) * item.quantity,
@@ -104,44 +99,39 @@ export function useCartDrawer({ storeName, whatsapp }: UseCartDrawerOptions) {
     clear();
   };
 
-  const hasWhatsApp = buildWhatsAppUrl(whatsapp) !== null;
   const canContinue = items.length > 0;
   const canReview = items.length > 0 && isDeliveryValid;
-  const canCheckout = hasWhatsApp && canReview;
+  const canCheckout = canReview && !isFeeToAgree && !isCheckoutLoading;
 
-  const checkout = () => {
+  const checkout = async () => {
     if (!canReview) {
       toast.error("Informe o bairro, a rua e o número para continuar.");
       return;
     }
 
-    const url = buildWhatsAppUrl(
-      whatsapp,
-      buildWhatsAppOrder(items, delivery, storeName || "loja"),
-    );
-
-    if (!url) {
-      toast.error("O WhatsApp da loja não está disponível no momento.");
+    if (isFeeToAgree || !delivery.area) {
+      toast.error("Escolha um bairro cadastrado para calcular a entrega.");
       return;
     }
 
-    trackEvent("order_sent_whatsapp", {
-      items_count: itemsCount,
-      products: productNames,
-      subtotal,
-      discount,
-      delivery_fee: isFeeToAgree ? null : deliveryFee,
-      total,
-      delivery_area: delivery.isManualArea ? delivery.neighborhood : (delivery.area?.name ?? ""),
-      is_manual_area: delivery.isManualArea,
-    });
-
-    window.open(url, "_blank", "noopener,noreferrer");
-
-    clear();
-    resetDelivery();
-    setStep("cart");
-    closeCart();
+    setIsCheckoutLoading(true);
+    try {
+      const { checkoutUrl } = await createCheckoutService(items, delivery);
+      trackEvent("payment_checkout_created", {
+        items_count: itemsCount,
+        products: productNames,
+        subtotal,
+        discount,
+        delivery_fee: deliveryFee,
+        total,
+        delivery_area: delivery.area.name,
+        is_manual_area: false,
+      });
+      window.location.assign(checkoutUrl);
+    } catch {
+      toast.error("Não foi possível iniciar o pagamento. Tente novamente.");
+      setIsCheckoutLoading(false);
+    }
   };
 
   return {
@@ -165,6 +155,7 @@ export function useCartDrawer({ storeName, whatsapp }: UseCartDrawerOptions) {
     canContinue,
     canReview,
     canCheckout,
+    isCheckoutLoading,
     checkout,
     deliveryForm: {
       delivery,

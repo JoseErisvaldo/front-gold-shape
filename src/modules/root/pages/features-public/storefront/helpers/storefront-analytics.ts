@@ -53,7 +53,7 @@ type StorefrontEvents = {
     subtotal: number;
     products: string[];
   };
-  order_sent_whatsapp: {
+  payment_checkout_created: {
     items_count: number;
     products: string[];
     subtotal: number;
