@@ -3,6 +3,7 @@ import DashboardIcon from "@mui/icons-material/DashboardRounded";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import ProductIcon from "@mui/icons-material/Inventory2Rounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import PaymentIcon from "@mui/icons-material/PaymentsRounded";
 import Profiles from "@mui/icons-material/PeopleRounded";
 import ProfileIcon from "@mui/icons-material/PersonRounded";
 import OrdersIcon from "@mui/icons-material/ReceiptLongRounded";
@@ -52,6 +53,11 @@ export const GoldShape_SIDEBAR_CONFIG: AppSidebarConfig = {
       label: "Pedidos",
       to: "/orders",
       icon: <OrdersIcon fontSize="small" />,
+    },
+    {
+      label: "Formas de pagamento",
+      to: "/payment-methods",
+      icon: <PaymentIcon fontSize="small" />,
     },
     {
       label: "Áreas de entrega",

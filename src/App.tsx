@@ -8,12 +8,13 @@ import { HomeView } from "./modules/root/pages/features/home";
 import { ListUsersView } from "./modules/root/pages/features/list-users";
 import { NotFoundView } from "./modules/root/pages/features/not-found";
 import { OrdersView } from "./modules/root/pages/features/orders";
+import { PaymentMethodsView } from "./modules/root/pages/features/payment-methods";
 import { ProductsListView } from "./modules/root/pages/features/products";
 import { CreateProductView } from "./modules/root/pages/features/products/views/create-product.view";
 import { StoresView } from "./modules/root/pages/features/store";
 import { ProfileView } from "./modules/root/pages/features/users";
 import { StoreProfileView } from "./modules/root/pages/features-public/store-profile";
-import { PaymentReturnView, StorefrontView } from "./modules/root/pages/features-public/storefront";
+import { StorefrontView } from "./modules/root/pages/features-public/storefront";
 import { AppLayout } from "./shared/components/layout";
 import { queryClient } from "./shared/services/queries";
 import { useAuthStore } from "./shared/store";
@@ -53,8 +54,7 @@ function App() {
       <Routes>
         <Route path="/session" element={<LoginRoute />} />
         <Route path="/" element={<StorefrontView />} />
-        <Route path="/pagamento-concluido" element={<PaymentReturnView />} />
-        <Route path="/store" element={<StoreProfileView />} />
+        <Route path="/loja" element={<StoreProfileView />} />
         <Route element={<ProtectedHomeRoute />}>
           <Route element={<AuthenticatedLayout />}>
             <Route path="/home" element={<HomeView />} />
@@ -64,6 +64,7 @@ function App() {
             <Route path="/products" element={<ProductsListView />} />
             <Route path="/products/create" element={<CreateProductView />} />
             <Route path="/orders" element={<OrdersView />} />
+            <Route path="/payment-methods" element={<PaymentMethodsView />} />
             <Route path="/delivery-areas" element={<DeliveryAreasListView />} />
             <Route path="/list-users" element={<ListUsersView />} />
             <Route path="/profile" element={<ProfileView />} />
