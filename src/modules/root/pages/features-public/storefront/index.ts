@@ -8,7 +8,6 @@ export type {
   PublicProduct,
   PublicStore,
 } from "./types/storefront.types";
-export { PaymentReturnView } from "./views/payment-return.view";
 export { ProductDetailsView } from "./views/product-details.view";
 export { StorefrontView } from "./views/storefront.view";
 export { StorefrontHomeView } from "./views/storefront-home.view";

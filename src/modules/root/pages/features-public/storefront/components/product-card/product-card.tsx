@@ -155,7 +155,11 @@ export function ProductCard({ product, onClick, onQuickAdd }: ProductCardProps) 
           {pricing ? (
             <Box sx={{ mt: 0.5 }}>
               <Typography sx={{ minHeight: 14, color: "#858A9D", fontSize: 11 }}>
-                {pricing.hasMultiplePrices ? "A partir de" : ""}
+                {hasDiscount
+                  ? "Preço especial no Pix"
+                  : pricing.hasMultiplePrices
+                    ? "A partir de"
+                    : ""}
               </Typography>
               <Box
                 sx={{
@@ -175,11 +179,16 @@ export function ProductCard({ product, onClick, onQuickAdd }: ProductCardProps) 
                   {formatPrice(pricing.price)}
                 </Typography>
                 {hasDiscount && (
-                  <Typography component="s" sx={{ color: "#858A9D", fontSize: 12 }}>
-                    {formatPrice(pricing.originalPrice)}
+                  <Typography sx={{ color: "#858A9D", fontSize: 12 }}>
+                    No cartão: {formatPrice(pricing.originalPrice)}
                   </Typography>
                 )}
               </Box>
+              {hasDiscount && (
+                <Typography sx={{ color: "#15803D", fontSize: 12, fontWeight: 700 }}>
+                  Desconto no Pix: {formatPrice(pricing.originalPrice - pricing.price)}
+                </Typography>
+              )}
             </Box>
           ) : (
             <Typography sx={{ mt: 0.5, color: "#858A9D", fontSize: 13 }}>Indisponível</Typography>

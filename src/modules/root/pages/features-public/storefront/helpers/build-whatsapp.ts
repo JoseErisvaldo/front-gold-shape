@@ -21,25 +21,6 @@ export function buildWhatsAppUrl(raw: string | null | undefined, message?: strin
     : `https://wa.me/${number}`;
 }
 
-export function buildOrderMessage(storeName: string, items: CartItem[]): string {
-  const lines = items.map(
-    (item) =>
-      `• ${item.quantity}x ${item.productName} (${item.variantLabel}) - ${formatPrice(
-        item.unitPrice * item.quantity,
-      )}`,
-  );
-
-  return [
-    `Olá! Gostaria de fazer um pedido na ${storeName}:`,
-    "",
-    ...lines,
-    "",
-    `Total: ${formatPrice(getCartSubtotal(items))}`,
-    "",
-    "Pode me ajudar com a entrega e o pagamento?",
-  ].join("\n");
-}
-
 export function buildWhatsAppOrder(
   items: CartItem[],
   delivery: DeliveryInfo,
