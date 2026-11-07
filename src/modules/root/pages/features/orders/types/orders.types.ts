@@ -1,22 +1,16 @@
 import { z } from "zod";
 
-export const orderStatusSchema = z.enum([
-  "PENDING",
-  "PAID",
-  "SETTLED",
-  "CANCELED",
-  "REFUNDED",
-  "PAYMENT_FAILED",
-]);
+export const orderStatusSchema = z.enum(["PENDING", "PAID", "CANCELED"]);
 
 export const orderSchema = z.object({
   id: z.string(),
   orderNsu: z.string(),
   status: orderStatusSchema,
   amount: z.number(),
-  transactionNsu: z.string().nullable(),
-  invoiceSlug: z.string().nullable().optional(),
-  captureMethod: z.string().nullable(),
+  customerName: z.string().nullable().optional(),
+  whatsapp: z.string().nullable().optional(),
+  deliveryFee: z.number().optional(),
+  paymentMethod: z.object({ name: z.string() }).nullable().optional(),
   cep: z.string().nullable(),
   street: z.string(),
   number: z.string(),
@@ -26,7 +20,6 @@ export const orderSchema = z.object({
   complement: z.string().nullable(),
   paidAt: z.string().nullable(),
   createdAt: z.string(),
-  events: z.array(z.object({ event: z.string(), createdAt: z.string() })),
   items: z.array(
     z.object({
       productName: z.string(),
@@ -39,6 +32,13 @@ export const orderSchema = z.object({
 });
 
 export const ordersSchema = z.array(orderSchema);
+export const paginatedOrdersSchema = z.object({
+  orders: ordersSchema,
+  total: z.number(),
+  page: z.number(),
+  pageSize: z.number(),
+});
 
 export type Order = z.infer<typeof orderSchema>;
 export type OrderStatus = z.infer<typeof orderStatusSchema>;
+export type PaginatedOrders = z.infer<typeof paginatedOrdersSchema>;

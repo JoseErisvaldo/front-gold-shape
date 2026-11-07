@@ -2,14 +2,11 @@ import type { OrderStatus } from "../types/orders.types";
 
 export const ORDER_STATUS_LABEL: Record<
   OrderStatus,
-  { label: string; color: "default" | "success" | "warning" | "error" | "info" }
+  { label: string; color: "success" | "warning" | "default" }
 > = {
   PENDING: { label: "Aguardando pagamento", color: "warning" },
   PAID: { label: "Pago", color: "success" },
-  SETTLED: { label: "Liquidado", color: "success" },
   CANCELED: { label: "Cancelado", color: "default" },
-  REFUNDED: { label: "Estornado", color: "info" },
-  PAYMENT_FAILED: { label: "Pagamento falhou", color: "error" },
 };
 
 const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });

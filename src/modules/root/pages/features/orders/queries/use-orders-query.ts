@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { listOrdersService } from "../services/list-orders.service";
+import { type ListOrdersParams, listOrdersService } from "../services/list-orders.service";
 
-export function useOrdersQuery() {
+export function useOrdersQuery(params: ListOrdersParams) {
   return useQuery({
-    queryKey: ["orders", "list"] as const,
-    queryFn: listOrdersService,
+    queryKey: ["orders", "list", params] as const,
+    queryFn: () => listOrdersService(params),
   });
 }
