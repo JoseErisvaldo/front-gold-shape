@@ -10,6 +10,8 @@ export const orderSchema = z.object({
   customerName: z.string().nullable().optional(),
   whatsapp: z.string().nullable().optional(),
   deliveryFee: z.number().optional(),
+  deliveryFeePending: z.boolean().optional().default(false),
+  cashReceived: z.number().nullable().optional(),
   paymentMethod: z.object({ name: z.string() }).nullable().optional(),
   cep: z.string().nullable(),
   street: z.string(),

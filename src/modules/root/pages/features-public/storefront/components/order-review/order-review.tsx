@@ -82,7 +82,7 @@ export function OrderReview({
   const area = delivery.area;
   const neighborhood = delivery.isManualArea ? delivery.neighborhood : (area?.name ?? "");
   const cityState = delivery.isManualArea
-    ? delivery.city
+    ? [delivery.city, delivery.state].filter(Boolean).join("/")
     : [area?.city, area?.state].filter(Boolean).join("/");
 
   const deliveryLabel = isFeeToAgree
@@ -273,7 +273,7 @@ export function OrderReview({
 
           <ValueRow
             strong
-            label={isFeeToAgree ? "Total (sem entrega)" : "Total"}
+            label={isFeeToAgree ? "Total parcial (sem entrega)" : "Total"}
             value={formatPrice(total)}
           />
 

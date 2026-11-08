@@ -1,4 +1,4 @@
-export type CepAddress = { street: string; neighborhood: string; city: string };
+export type CepAddress = { street: string; neighborhood: string; city: string; state: string };
 
 export const onlyDigits = (value: string) => value.replace(/\D/g, "");
 
@@ -19,6 +19,7 @@ export async function fetchCep(cep: string): Promise<CepAddress | null> {
       street: data.logradouro ?? "",
       neighborhood: data.bairro ?? "",
       city: data.localidade ?? "",
+      state: data.uf ?? "",
     };
   } catch {
     return null;
