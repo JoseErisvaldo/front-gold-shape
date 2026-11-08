@@ -126,7 +126,7 @@ export function useCartDrawer() {
 
   const goToReview = () => {
     if (!isDeliveryValid) {
-      toast.error("Informe o bairro, a rua e o número para continuar.");
+      toast.error("Informe um CEP válido, o bairro, a rua e o número para continuar.");
       return;
     }
 
@@ -159,38 +159,41 @@ export function useCartDrawer() {
     !isRefreshingPrices &&
     !priceRefreshError &&
     !hasUnavailableItems;
-  const canCheckout = canReview && !isFeeToAgree && !isCheckoutLoading && !isRefreshingPrices;
+  const canCheckout = canReview && !isCheckoutLoading && !isRefreshingPrices;
 
   const checkout = async (
     customerName: string,
     whatsapp: string,
     paymentMethodId: string,
     isPix: boolean,
+    cashReceivedCents?: number,
   ): Promise<boolean> => {
     if (!canReview) {
-      toast.error("Informe o bairro, a rua e o número para continuar.");
+      toast.error("Informe um CEP válido, o bairro, a rua e o número para continuar.");
       return false;
     }
 
-    if (isFeeToAgree || !delivery.area || !customerName.trim() || !whatsapp.trim()) {
+    if ((!delivery.area && !delivery.isManualArea) || !customerName.trim() || !whatsapp.trim()) {
       toast.error("Escolha um bairro cadastrado para calcular a entrega.");
-      return false;
-    }
-
-    setIsCheckoutLoading(true);
-    const refreshResult = await refreshCartPrices();
-    if (!refreshResult) {
-      setIsCheckoutLoading(false);
-      return false;
-    }
-    if (refreshResult.changed || refreshResult.unavailable) {
-      toast.info("Os valores ou a disponibilidade mudaram. Confira o pedido e confirme novamente.");
-      setIsCheckoutLoading(false);
       return false;
     }
 
     const whatsappWindow = window.open("about:blank", "_blank");
     if (whatsappWindow) whatsappWindow.opener = null;
+    setIsCheckoutLoading(true);
+    const refreshResult = await refreshCartPrices();
+    if (!refreshResult) {
+      whatsappWindow?.close();
+      setIsCheckoutLoading(false);
+      return false;
+    }
+    if (refreshResult.changed || refreshResult.unavailable) {
+      whatsappWindow?.close();
+      toast.info("Os valores ou a disponibilidade mudaram. Confira o pedido e confirme novamente.");
+      setIsCheckoutLoading(false);
+      return false;
+    }
+
     try {
       const order = await createCheckoutService(
         items,
@@ -199,6 +202,7 @@ export function useCartDrawer() {
         whatsapp,
         paymentMethodId,
         isPix,
+        cashReceivedCents,
       );
       setCheckoutPriceChanged(false);
       trackEvent("payment_checkout_created", {
@@ -208,8 +212,10 @@ export function useCartDrawer() {
         discount,
         delivery_fee: deliveryFee,
         total,
-        delivery_area: delivery.area.name,
-        is_manual_area: false,
+        delivery_area: delivery.isManualArea
+          ? delivery.neighborhood
+          : (delivery.area?.name ?? delivery.neighborhood),
+        is_manual_area: delivery.isManualArea,
       });
       const pix = order.paymentMethodName.toLocaleLowerCase("pt-BR") === "pix";
       const orderSubtotal =
@@ -218,26 +224,44 @@ export function useCartDrawer() {
         order.items.reduce((sum, item) => sum + item.regularUnitPrice * item.quantity, 0) / 100;
       const pixDiscount = regularSubtotal - orderSubtotal;
       const lines = [
-        `*Novo pedido ${order.orderNsu}*`,
-        `Cliente: ${customerName}`,
-        `WhatsApp: ${whatsapp}`,
-        `Pagamento: ${order.paymentMethodName}`,
+        "Olá, tudo bem?",
+        "Gostaria de fazer um pedido. Seguem os detalhes:",
         "",
-        ...order.items.map((item) => {
+        `*Pedido ${order.orderNsu}*`,
+        "",
+        "*Itens do pedido:*",
+        ...order.items.map((item, index) => {
           const unitPrice = (pix ? item.unitPrice : item.regularUnitPrice) / 100;
-          return `${item.productName}${item.variantLabel ? ` (${item.variantLabel})` : ""} — SKU ${item.sku} — ${item.quantity} x ${formatPrice(unitPrice)} = ${formatPrice(unitPrice * item.quantity)}`;
+          return `${index + 1}. *${item.productName}*${item.variantLabel ? ` — ${item.variantLabel}` : ""}\n   ${item.quantity} x ${formatPrice(unitPrice)} = *${formatPrice(unitPrice * item.quantity)}*`;
         }),
         "",
         ...(pix && pixDiscount > 0
           ? [
-              `Subtotal regular: ${formatPrice(regularSubtotal)}`,
-              `Desconto Pix: -${formatPrice(pixDiscount)}`,
+              `Subtotal sem desconto: ${formatPrice(regularSubtotal)}`,
+              `Desconto no Pix: -${formatPrice(pixDiscount)}`,
+              `Subtotal com desconto: ${formatPrice(orderSubtotal)}`,
+            ]
+          : [`Subtotal dos produtos: ${formatPrice(orderSubtotal)}`]),
+        `Entrega: ${order.deliveryFeePending ? "a combinar com a loja" : order.deliveryFee > 0 ? formatPrice(order.deliveryFee) : "grátis"}`,
+        `*${order.deliveryFeePending ? "Total parcial" : "Total do pedido"}: ${formatPrice(order.amount)}*`,
+        "",
+        "*Dados do cliente:*",
+        `Nome: ${customerName}`,
+        `WhatsApp: ${whatsapp}`,
+        `Pagamento: ${order.paymentMethodName}`,
+        ...(order.cashReceivedCents !== null
+          ? [
+              `Pagará com: ${formatPrice(order.cashReceivedCents / 100)}`,
+              `Troco: ${order.deliveryFeePending ? "a confirmar após combinar a entrega" : formatPrice(order.cashReceivedCents / 100 - order.amount)}`,
             ]
           : []),
-        `Subtotal dos produtos: ${formatPrice(orderSubtotal)}`,
-        `Entrega: ${formatPrice(order.deliveryFee)}`,
-        `*Total: ${formatPrice(order.amount)}*`,
-        `Endereço: ${delivery.street}, ${delivery.number}${delivery.complement ? `, ${delivery.complement}` : ""}, ${delivery.area.name}, ${delivery.area.city}/${delivery.area.state}${delivery.cep ? `, CEP ${delivery.cep}` : ""}`,
+        "",
+        "*Endereço de entrega:*",
+        `${delivery.street}, ${delivery.number}${delivery.complement ? `, ${delivery.complement}` : ""}`,
+        `${delivery.isManualArea ? delivery.neighborhood : (delivery.area?.name ?? "")}, ${delivery.isManualArea ? delivery.city : (delivery.area?.city ?? "")}/${delivery.isManualArea ? delivery.state : (delivery.area?.state ?? "")}`,
+        ...(delivery.cep ? [`CEP: ${delivery.cep}`] : []),
+        "",
+        "Aguardo a confirmação do pedido e o retorno de vocês. Obrigado!",
       ];
       const storeNumber = normalizeWhatsAppNumber(order.storeWhatsapp);
       if (!storeNumber) throw new Error("O WhatsApp da loja não está configurado corretamente.");

@@ -9,6 +9,8 @@ const checkoutResponseSchema = z.object({
   orderNsu: z.string(),
   amount: z.number(),
   deliveryFee: z.number(),
+  deliveryFeePending: z.boolean(),
+  cashReceivedCents: z.number().nullable(),
   storeWhatsapp: z.string(),
   paymentMethodName: z.string(),
   items: z.array(
@@ -30,8 +32,9 @@ export async function createCheckoutService(
   whatsapp: string,
   paymentMethodId: string,
   isPix: boolean,
+  cashReceivedCents?: number,
 ): Promise<z.infer<typeof checkoutResponseSchema>> {
-  if (!delivery.area) {
+  if (!delivery.area && !delivery.isManualArea) {
     throw new Error("Escolha um bairro cadastrado para calcular a entrega.");
   }
 
@@ -42,17 +45,19 @@ export async function createCheckoutService(
         quantity: item.quantity,
         expectedUnitPriceCents: Math.round((isPix ? item.unitPrice : item.originalPrice) * 100),
       })),
-      deliveryAreaId: delivery.area.id,
+      ...(delivery.area ? { deliveryAreaId: delivery.area.id } : {}),
+      deliveryFeePending: delivery.isManualArea,
+      ...(cashReceivedCents !== undefined ? { cashReceivedCents } : {}),
       customerName,
       whatsapp,
       paymentMethodId,
       address: {
-        cep: delivery.cep || undefined,
+        cep: delivery.cep,
         street: delivery.street,
         number: delivery.number,
-        neighborhood: delivery.area.name,
-        city: delivery.area.city,
-        state: delivery.area.state,
+        neighborhood: delivery.isManualArea ? delivery.neighborhood : (delivery.area?.name ?? ""),
+        city: delivery.isManualArea ? delivery.city : (delivery.area?.city ?? ""),
+        state: delivery.isManualArea ? delivery.state : (delivery.area?.state ?? ""),
         complement: delivery.complement || undefined,
       },
     });

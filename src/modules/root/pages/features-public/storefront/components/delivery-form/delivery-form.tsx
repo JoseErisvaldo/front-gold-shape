@@ -105,6 +105,20 @@ export function DeliveryForm({
             onChange={(event) => onChange({ neighborhood: event.target.value })}
             sx={fieldSx}
           />
+          <TextField
+            required
+            label="Cidade"
+            value={delivery.city}
+            onChange={(event) => onChange({ city: event.target.value })}
+            sx={fieldSx}
+          />
+          <TextField
+            required
+            label="Estado (UF)"
+            value={delivery.state}
+            onChange={(event) => onChange({ state: event.target.value.toUpperCase().slice(0, 2) })}
+            sx={fieldSx}
+          />
           <Alert severity="info" sx={{ borderRadius: "10px" }}>
             O valor da entrega para este bairro será combinado com a loja pelo WhatsApp.
           </Alert>
@@ -189,12 +203,20 @@ export function DeliveryForm({
       )}
 
       <TextField
-        label="CEP (opcional)"
+        required
+        label="CEP"
+        placeholder="00000-000"
         value={delivery.cep}
         onChange={(event) => onCepChange(event.target.value)}
+        error={delivery.cep !== "" && delivery.cep.replace(/\D/g, "").length !== 8}
+        helperText={
+          delivery.cep !== "" && delivery.cep.replace(/\D/g, "").length !== 8
+            ? "Informe um CEP com 8 números."
+            : "O CEP será usado para preencher os dados do endereço."
+        }
         sx={fieldSx}
         slotProps={{
-          htmlInput: { inputMode: "numeric", maxLength: 9 },
+          htmlInput: { inputMode: "numeric", maxLength: 9, required: true },
           input: {
             endAdornment: isSearchingCep ? <CircularProgress size={16} /> : undefined,
           },

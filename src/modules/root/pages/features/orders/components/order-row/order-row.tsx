@@ -1,5 +1,6 @@
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import WarningAmberRoundedIcon from "@mui/icons-material/WarningAmberRounded";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import {
   Box,
@@ -13,6 +14,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -99,10 +101,29 @@ export function OrderRow({ order }: OrderRowProps) {
           <Chip size="small" label={status.label} color={status.color} />
         </TableCell>
         <TableCell>
-          {order.neighborhood} - {order.city}/{order.state}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
+            <span>
+              {order.neighborhood} - {order.city}/{order.state}
+            </span>
+            {order.deliveryFeePending && (
+              <Tooltip title="Taxa de entrega e total final a combinar com o cliente">
+                <WarningAmberRoundedIcon
+                  aria-label="Entrega a combinar"
+                  sx={{ color: "#D97706", fontSize: 18, flexShrink: 0 }}
+                />
+              </Tooltip>
+            )}
+          </Box>
         </TableCell>
         <TableCell align="right" sx={{ fontWeight: 700 }}>
-          {formatCents(order.amount)}
+          <Box sx={{ textAlign: "right" }}>
+            {formatCents(order.amount)}
+            {order.deliveryFeePending && (
+              <Typography sx={{ color: "#858A9D", fontSize: 11, fontWeight: 400 }}>
+                Total parcial
+              </Typography>
+            )}
+          </Box>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -120,7 +141,18 @@ export function OrderRow({ order }: OrderRowProps) {
                 <Detail label="WhatsApp" value={order.whatsapp ?? "—"} />
                 <Detail label="Endereço de entrega" value={address} />
                 <Detail label="Meio de pagamento" value={order.paymentMethod?.name ?? "—"} />
-                <Detail label="Taxa de entrega" value={formatCents(order.deliveryFee ?? 0)} />
+                <Detail
+                  label="Taxa de entrega"
+                  value={
+                    order.deliveryFeePending ? "A combinar" : formatCents(order.deliveryFee ?? 0)
+                  }
+                />
+                {order.cashReceived !== null && order.cashReceived !== undefined && (
+                  <Detail
+                    label="Cliente pagará em dinheiro com"
+                    value={formatCents(order.cashReceived)}
+                  />
+                )}
                 <Detail label="Pago em" value={order.paidAt ? formatDateTime(order.paidAt) : "—"} />
                 <TextField
                   select

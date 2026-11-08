@@ -41,12 +41,25 @@ const PRIMARY_BUTTON_SX = {
   "&:hover": { bgcolor: "#15803D" },
 } as const;
 
+function parseCashAmountCents(value: string): number | null {
+  const rawAmount = value.trim();
+  const amount = Number(
+    rawAmount.includes(",") ? rawAmount.replace(/\./g, "").replace(",", ".") : rawAmount,
+  );
+  return Number.isFinite(amount) && amount > 0 ? Math.round(amount * 100) : null;
+}
+
 export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const [customerName, setCustomerName] = useState("");
   const [customerWhatsapp, setCustomerWhatsapp] = useState("");
   const [paymentMethods, setPaymentMethods] = useState<{ id: string; name: string }[]>([]);
   const [paymentMethodId, setPaymentMethodId] = useState("");
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [isCashDialogOpen, setIsCashDialogOpen] = useState(false);
+  const [pendingCashPaymentMethodId, setPendingCashPaymentMethodId] = useState("");
+  const [cashReceivedInput, setCashReceivedInput] = useState("");
+  const [cashReceivedCents, setCashReceivedCents] = useState<number | null>(null);
+  const [cashInputError, setCashInputError] = useState("");
   useEffect(() => {
     apiClient
       .get("/public/payment-methods")
@@ -100,9 +113,53 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
   const isPixSelected =
     paymentMethods.find(({ id }) => id === paymentMethodId)?.name.toLocaleLowerCase("pt-BR") ===
     "pix";
+  const isCashSelected =
+    paymentMethods.find(({ id }) => id === paymentMethodId)?.name.toLocaleLowerCase("pt-BR") ===
+    "dinheiro";
   const displayedSubtotal = isPixSelected ? subtotal : originalSubtotal;
   const displayedDiscount = isPixSelected ? discount : 0;
   const displayedTotal = displayedSubtotal + deliveryFee;
+  const cashMinimumCents = Math.round((originalSubtotal + deliveryFee) * 100);
+  const enteredCashCents = parseCashAmountCents(cashReceivedInput);
+  const estimatedChangeCents =
+    enteredCashCents !== null && enteredCashCents >= cashMinimumCents
+      ? enteredCashCents - cashMinimumCents
+      : null;
+
+  const handlePaymentMethodChange = (nextPaymentMethodId: string) => {
+    const nextMethod = paymentMethods.find((method) => method.id === nextPaymentMethodId);
+    if (nextMethod?.name.toLocaleLowerCase("pt-BR") === "dinheiro") {
+      setPendingCashPaymentMethodId(nextPaymentMethodId);
+      setCashReceivedInput(cashReceivedCents === null ? "" : (cashReceivedCents / 100).toFixed(2));
+      setCashInputError("");
+      setIsCashDialogOpen(true);
+      return;
+    }
+
+    setPaymentMethodId(nextPaymentMethodId);
+    setCashReceivedCents(null);
+    setCashReceivedInput("");
+  };
+
+  const confirmCashAmount = () => {
+    const amountCents = parseCashAmountCents(cashReceivedInput);
+    if (amountCents === null) {
+      setCashInputError("Informe um valor válido para calcular o troco.");
+      return;
+    }
+    if (amountCents < cashMinimumCents) {
+      setCashInputError(
+        `O valor precisa ser igual ou maior que ${formatPrice(cashMinimumCents / 100)}.`,
+      );
+      return;
+    }
+
+    setPaymentMethodId(pendingCashPaymentMethodId);
+    setCashReceivedCents(amountCents);
+    setIsCashDialogOpen(false);
+    setPendingCashPaymentMethodId("");
+    setCashInputError("");
+  };
   const showBackButton = isDeliveryStep || isReviewStep;
 
   const title = isReviewStep
@@ -325,11 +382,13 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                       required
                       label="Forma de pagamento"
                       value={paymentMethodId}
-                      onChange={(event) => setPaymentMethodId(event.target.value)}
+                      onChange={(event) => handlePaymentMethodChange(event.target.value)}
                       helperText={
                         !paymentMethodId
                           ? "Selecione uma forma de pagamento para continuar."
-                          : undefined
+                          : isCashSelected && cashReceivedCents === null
+                            ? "Informe o valor que será entregue em dinheiro."
+                            : undefined
                       }
                     >
                       {paymentMethods.map((method) => (
@@ -347,12 +406,20 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                     }}
                   >
                     <Typography sx={{ color: "#5A5F73", fontSize: 14 }}>
-                      {isFeeToAgree ? "Total (sem entrega)" : "Total"}
+                      {isFeeToAgree ? "Total parcial (sem entrega)" : "Total"}
                     </Typography>
                     <Typography sx={{ color: "#292D45", fontSize: 22, fontWeight: 800 }}>
                       {formatPrice(displayedTotal)}
                     </Typography>
                   </Box>
+                  {isCashSelected && cashReceivedCents !== null && (
+                    <Typography sx={{ mt: 1, color: "#5A5F73", fontSize: 13 }}>
+                      Pagará com {formatPrice(cashReceivedCents / 100)}.{" "}
+                      {isFeeToAgree
+                        ? "O troco será calculado após combinar a entrega."
+                        : `Troco estimado: ${formatPrice(cashReceivedCents / 100 - displayedTotal)}.`}
+                    </Typography>
+                  )}
 
                   <Button
                     fullWidth
@@ -362,7 +429,8 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
                       !canCheckout ||
                       !customerName.trim() ||
                       customerWhatsapp.replace(/\D/g, "").length < 10 ||
-                      !paymentMethodId
+                      !paymentMethodId ||
+                      (isCashSelected && cashReceivedCents === null)
                     }
                     startIcon={<PaymentRoundedIcon />}
                     onClick={() => setIsConfirmDialogOpen(true)}
@@ -373,7 +441,7 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
 
                   {isFeeToAgree ? (
                     <Alert severity="info" sx={{ mt: 1.5, borderRadius: "10px" }}>
-                      Para pagar online, escolha um bairro cadastrado para calcular a entrega.
+                      A taxa de entrega será combinada com a loja pelo WhatsApp.
                     </Alert>
                   ) : null}
                 </Box>
@@ -456,6 +524,77 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
         )}
       </Box>
       <Dialog
+        open={isCashDialogOpen}
+        onClose={() => {
+          setIsCashDialogOpen(false);
+          setPendingCashPaymentMethodId("");
+          setCashInputError("");
+        }}
+        fullWidth
+        maxWidth="xs"
+        aria-labelledby="cash-change-title"
+      >
+        <DialogTitle id="cash-change-title">Troco para quanto?</DialogTitle>
+        <DialogContent>
+          <Alert severity="info" sx={{ mb: 2, borderRadius: "10px" }}>
+            Informe quanto você vai entregar em dinheiro. Exemplo: pedido de R$ 60,00, pagamento com
+            R$ 100,00.
+            {isFeeToAgree &&
+              " Como a taxa de entrega será combinada com a loja, o troco final será calculado depois."}
+          </Alert>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "minmax(0, 1fr) auto" },
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <TextField
+              autoFocus
+              fullWidth
+              required
+              type="text"
+              label="Troco para quanto?"
+              placeholder="Ex.: 100,00"
+              value={cashReceivedInput}
+              onChange={(event) => {
+                setCashReceivedInput(event.target.value);
+                setCashInputError("");
+              }}
+              error={Boolean(cashInputError)}
+              helperText={cashInputError || `Mínimo: ${formatPrice(cashMinimumCents / 100)}`}
+              slotProps={{ htmlInput: { inputMode: "decimal" } }}
+              sx={{ mt: 1 }}
+            />
+            {estimatedChangeCents !== null && (
+              <Box sx={{ textAlign: { xs: "left", sm: "right" }, pb: { sm: 2 } }}>
+                <Typography sx={{ color: "#858A9D", fontSize: 12 }}>
+                  {isFeeToAgree ? "Troco estimado*" : "Seu troco"}
+                </Typography>
+                <Typography sx={{ color: "#15803D", fontSize: 18, fontWeight: 800 }}>
+                  {formatPrice(estimatedChangeCents / 100)}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button
+            onClick={() => {
+              setIsCashDialogOpen(false);
+              setPendingCashPaymentMethodId("");
+              setCashInputError("");
+            }}
+          >
+            Cancelar
+          </Button>
+          <Button variant="contained" onClick={confirmCashAmount}>
+            Confirmar valor
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
         open={isConfirmDialogOpen}
         onClose={() => {
           if (!isCheckoutLoading) setIsConfirmDialogOpen(false);
@@ -465,8 +604,9 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
         <DialogTitle id="confirm-whatsapp-order-title">Finalizar pedido?</DialogTitle>
         <DialogContent>
           <Alert severity="info" sx={{ borderRadius: "10px" }}>
-            Ao confirmar, o pedido será registrado e você será redirecionado para o WhatsApp da loja
-            para concluir a venda.
+            Ao confirmar, você será redirecionado ao WhatsApp da loja com a mensagem do pedido
+            pronta. Para que a loja receba e atenda seu pedido, é necessário enviar essa mensagem
+            pelo WhatsApp.
           </Alert>
         </DialogContent>
         <DialogActions
@@ -491,11 +631,18 @@ export function CartDrawer({ open, onClose }: CartDrawerProps) {
             disabled={isCheckoutLoading}
             fullWidth
             onClick={async () => {
-              await checkout(customerName, customerWhatsapp, paymentMethodId, isPixSelected);
+              await checkout(
+                customerName,
+                customerWhatsapp,
+                paymentMethodId,
+                isPixSelected,
+                isCashSelected ? (cashReceivedCents ?? undefined) : undefined,
+              );
               setIsConfirmDialogOpen(false);
             }}
           >
-            {isCheckoutLoading ? "Salvando pedido..." : "Confirmar e ir ao WhatsApp"}
+            {isCheckoutLoading ? "Preparando pedido..." : "Continuar para o WhatsApp"}
+            x``{" "}
           </Button>
         </DialogActions>
       </Dialog>
