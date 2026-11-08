@@ -9,6 +9,16 @@ type CartState = {
   isOpen: boolean;
   addItem: (item: Omit<CartItem, "quantity">, quantity: number) => AddItemResult;
   setQuantity: (variantId: string, quantity: number) => void;
+  updatePrices: (prices: {
+    variants: {
+      id: string;
+      price: number;
+      discountPercentage: number | null;
+      stockQuantity: number | null;
+      available: boolean;
+    }[];
+    unavailableVariantIds: string[];
+  }) => void;
   removeItem: (variantId: string) => void;
   clear: () => void;
   openCart: () => void;
@@ -53,6 +63,30 @@ export const useCartStore = create<CartState>()(
               : item,
           ),
         })),
+
+      updatePrices: ({ variants, unavailableVariantIds }) =>
+        set((state) => {
+          const currentPrices = new Map(variants.map((variant) => [variant.id, variant]));
+          const unavailableIds = new Set(unavailableVariantIds);
+          return {
+            items: state.items.map((item) => {
+              const current = currentPrices.get(item.variantId);
+              if (!current) {
+                return unavailableIds.has(item.variantId) ? { ...item, isAvailable: false } : item;
+              }
+              const discount = current.discountPercentage ?? 0;
+              const effectivePrice = Math.round(current.price * (1 - discount / 100) * 100) / 100;
+              return {
+                ...item,
+                unitPrice: effectivePrice,
+                originalPrice: current.price,
+                maxQuantity:
+                  current.stockQuantity === null ? 99 : Math.min(current.stockQuantity, 99),
+                isAvailable: current.available,
+              };
+            }),
+          };
+        }),
 
       removeItem: (variantId) =>
         set((state) => ({

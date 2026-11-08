@@ -1,9 +1,9 @@
 import AddShoppingCartRoundedIcon from "@mui/icons-material/AddShoppingCartRounded";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import Inventory2RoundedIcon from "@mui/icons-material/Inventory2Rounded";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Alert, Box, Button, Chip, Divider, Paper, Stack, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { PaymentMethodsDrawer } from "../components/payment-methods-drawer/payment-methods-drawer";
 import { ProductCard } from "../components/product-card/product-card";
 import { ProductDetailsSkeleton } from "../components/product-details-skeleton/product-details-skeleton";
 import { ProductsGrid } from "../components/products-grid/products-grid";
@@ -30,6 +30,7 @@ const STOCK_TONES = {
 } as const;
 
 export function ProductDetailsView({ productId, onBack, onProductClick }: ProductDetailsViewProps) {
+  const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false);
   const {
     product,
     isPending,
@@ -44,9 +45,7 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
     setQuantity,
     related,
     quickAdd,
-    canOrderOnWhatsApp,
     handleAddToCart,
-    handleOrderOnWhatsApp,
   } = useProductDetailsPage(productId);
 
   const productIdValue = product?.id;
@@ -197,6 +196,11 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
 
             {price !== null && (
               <Box>
+                {hasDiscount && (
+                  <Typography sx={{ color: "#15803D", fontSize: 13, fontWeight: 700 }}>
+                    Preço especial no Pix
+                  </Typography>
+                )}
                 <Box
                   sx={{
                     display: "flex",
@@ -223,22 +227,41 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
 
                       <Chip
                         size="small"
-                        label={`-${Math.round(selectedVariant.discountPercentage ?? 0)}%`}
-                        sx={{
-                          color: "#FFFFFF",
-                          bgcolor: "#F58A33",
-                          fontWeight: 700,
-                        }}
+                        label={`Desconto Pix: ${formatPrice(selectedVariant.price - price)}`}
+                        sx={{ color: "#FFFFFF", bgcolor: "#15803D", fontWeight: 700 }}
                       />
                     </>
                   )}
                 </Box>
+                {hasDiscount && selectedVariant && (
+                  <Typography sx={{ mt: 0.5, color: "#858A9D", fontSize: 13 }}>
+                    No cartão: {formatPrice(selectedVariant.price)}
+                  </Typography>
+                )}
 
                 {quantity > 1 && (
                   <Typography sx={{ mt: 0.5, color: "#858A9D", fontSize: 13 }}>
                     Total: {formatPrice(price * quantity)}
                   </Typography>
                 )}
+                <Button
+                  variant="text"
+                  onClick={() => setIsPaymentDrawerOpen(true)}
+                  sx={{
+                    mt: 0.5,
+                    ml: -1,
+                    color: "#16A34A",
+                    textTransform: "none",
+                    textDecoration: "underline",
+                    textUnderlineOffset: "3px",
+                    "&:hover": {
+                      bgcolor: "transparent",
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  Ver os meios de pagamento
+                </Button>
               </Box>
             )}
 
@@ -319,60 +342,35 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
               >
                 {isAvailable ? "Adicionar ao carrinho" : "Indisponível"}
               </Button>
-
-              {canOrderOnWhatsApp && (
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  disabled={!isAvailable}
-                  startIcon={<WhatsAppIcon />}
-                  onClick={handleOrderOnWhatsApp}
-                  sx={{
-                    minHeight: 50,
-                    borderRadius: "10px",
-                    color: "#16A34A",
-                    borderColor: "#16A34A",
-                    fontWeight: 700,
-                    textTransform: "none",
-                    "&:hover": { bgcolor: "#F0FDF4", borderColor: "#15803D" },
-                  }}
-                >
-                  Pedir pelo WhatsApp
-                </Button>
-              )}
             </Box>
-
-            {product.description && (
-              <>
-                <Divider />
-
-                <Box>
-                  <Typography
-                    component="h2"
-                    sx={{
-                      mb: 1,
-                      color: "#292D45",
-                      fontSize: 16,
-                      fontWeight: 700,
-                    }}
-                  >
-                    Descrição
-                  </Typography>
-
-                  <Typography
-                    sx={{
-                      color: "#5A5F73",
-                      fontSize: 14,
-                      lineHeight: 1.75,
-                      whiteSpace: "pre-line",
-                    }}
-                  >
-                    {product.description}
-                  </Typography>
-                </Box>
-              </>
-            )}
           </Stack>
+          {product.description && (
+            <Box sx={{ gridColumn: "1 / -1", minWidth: 0 }}>
+              <Divider sx={{ mb: 2 }} />
+              <Typography
+                component="h2"
+                sx={{
+                  mb: 1,
+                  color: "#292D45",
+                  fontSize: 16,
+                  fontWeight: 700,
+                }}
+              >
+                Descrição
+              </Typography>
+              <Typography
+                sx={{
+                  color: "#5A5F73",
+                  fontSize: 14,
+                  lineHeight: 1.75,
+                  whiteSpace: "pre-line",
+                  overflowWrap: "anywhere",
+                }}
+              >
+                {product.description}
+              </Typography>
+            </Box>
+          )}
         </Paper>
       )}
 
@@ -392,6 +390,10 @@ export function ProductDetailsView({ productId, onBack, onProductClick }: Produc
           </ProductsGrid>
         </Box>
       )}
+      <PaymentMethodsDrawer
+        open={isPaymentDrawerOpen}
+        onClose={() => setIsPaymentDrawerOpen(false)}
+      />
     </Stack>
   );
 }

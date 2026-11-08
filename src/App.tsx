@@ -7,6 +7,8 @@ import { DeliveryAreasListView } from "./modules/root/pages/features/delivery-ar
 import { HomeView } from "./modules/root/pages/features/home";
 import { ListUsersView } from "./modules/root/pages/features/list-users";
 import { NotFoundView } from "./modules/root/pages/features/not-found";
+import { OrdersView } from "./modules/root/pages/features/orders";
+import { PaymentMethodsView } from "./modules/root/pages/features/payment-methods";
 import { ProductsListView } from "./modules/root/pages/features/products";
 import { CreateProductView } from "./modules/root/pages/features/products/views/create-product.view";
 import { StoresView } from "./modules/root/pages/features/store";
@@ -52,7 +54,7 @@ function App() {
       <Routes>
         <Route path="/session" element={<LoginRoute />} />
         <Route path="/" element={<StorefrontView />} />
-        <Route path="/store" element={<StoreProfileView />} />
+        <Route path="/loja" element={<StoreProfileView />} />
         <Route element={<ProtectedHomeRoute />}>
           <Route element={<AuthenticatedLayout />}>
             <Route path="/home" element={<HomeView />} />
@@ -61,6 +63,8 @@ function App() {
             <Route path="/categories" element={<CategoriesView />} />
             <Route path="/products" element={<ProductsListView />} />
             <Route path="/products/create" element={<CreateProductView />} />
+            <Route path="/orders" element={<OrdersView />} />
+            <Route path="/payment-methods" element={<PaymentMethodsView />} />
             <Route path="/delivery-areas" element={<DeliveryAreasListView />} />
             <Route path="/list-users" element={<ListUsersView />} />
             <Route path="/profile" element={<ProfileView />} />

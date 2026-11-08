@@ -34,6 +34,7 @@ export type CartItem = {
   originalPrice: number;
   quantity: number;
   maxQuantity: number;
+  isAvailable?: boolean;
 };
 
 export type DeliveryInfo = {

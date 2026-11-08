@@ -1,5 +1,11 @@
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import PaymentsOutlinedIcon from "@mui/icons-material/PaymentsOutlined";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Box, Button, Typography } from "@mui/material";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { PaymentMethodsDrawer } from "../payment-methods-drawer/payment-methods-drawer";
 
 type StorefrontFooterProps = {
   storeName: string;
@@ -7,6 +13,8 @@ type StorefrontFooterProps = {
 };
 
 export function StorefrontFooter({ storeName, whatsappUrl }: StorefrontFooterProps) {
+  const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false);
+
   return (
     <Box component="footer" sx={{ mt: 6, borderTop: "1px solid #DFE2EC", bgcolor: "#FFFFFF" }}>
       <Box
@@ -29,36 +37,126 @@ export function StorefrontFooter({ storeName, whatsappUrl }: StorefrontFooterPro
             {storeName}
           </Typography>
           <Typography sx={{ mt: 0.5, color: "#858A9D", fontSize: 13, lineHeight: 1.6 }}>
-            Pedidos finalizados pelo WhatsApp, com entrega e pagamento combinados com a loja.
-          </Typography>
-          <Typography sx={{ mt: 1.5, color: "#A1AEA6", fontSize: 12 }}>
-            © {new Date().getFullYear()} {storeName}. Todos os direitos reservados.
+            Sua loja de suplementos em Louveira, com produtos selecionados para apoiar sua saúde,
+            bem-estar e desempenho.
           </Typography>
         </Box>
 
-        {whatsappUrl && (
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1.5,
+            width: { xs: "100%", sm: "auto" },
+          }}
+        >
           <Button
             variant="outlined"
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            startIcon={<WhatsAppIcon />}
+            component={Link}
+            to="/loja"
+            startIcon={<LocalShippingOutlinedIcon />}
             sx={{
-              minHeight: 44,
-              px: 3,
-              borderRadius: "10px",
-              color: "#16A34A",
-              borderColor: "#16A34A",
+              minHeight: 40,
+              px: 1.5,
+              borderRadius: "9px",
+              color: "#5A5F73",
+              borderColor: "#DFE2EC",
+              fontSize: 12,
               fontWeight: 600,
               textTransform: "none",
               whiteSpace: "nowrap",
-              "&:hover": { bgcolor: "#F0FDF4", borderColor: "#15803D" },
+              minWidth: 0,
+              "& .MuiButton-startIcon": { mr: 0.75 },
             }}
           >
-            Falar no WhatsApp
+            Endereço e horário
           </Button>
-        )}
+          <Button
+            variant="outlined"
+            onClick={() => setIsPaymentDrawerOpen(true)}
+            startIcon={<PaymentsOutlinedIcon />}
+            sx={{
+              minHeight: 40,
+              px: 1.5,
+              borderRadius: "9px",
+              color: "#5A5F73",
+              borderColor: "#DFE2EC",
+              fontSize: 12,
+              fontWeight: 600,
+              textTransform: "none",
+              whiteSpace: "nowrap",
+              minWidth: 0,
+              "& .MuiButton-startIcon": { mr: 0.75 },
+            }}
+          >
+            Formas de pagamento
+          </Button>
+          {whatsappUrl && (
+            <Button
+              variant="outlined"
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              startIcon={<WhatsAppIcon />}
+              sx={{
+                minHeight: 40,
+                px: 1.5,
+                borderRadius: "9px",
+                color: "#16A34A",
+                borderColor: "#16A34A",
+                fontSize: 12,
+                fontWeight: 600,
+                textTransform: "none",
+                whiteSpace: "nowrap",
+                minWidth: 0,
+                "& .MuiButton-startIcon": { mr: 0.75 },
+                "&:hover": { bgcolor: "#F0FDF4", borderColor: "#15803D" },
+              }}
+            >
+              Falar no WhatsApp
+            </Button>
+          )}
+          <Button
+            variant="outlined"
+            href="https://www.instagram.com/suplementosgoldshapelouveira/"
+            target="_blank"
+            rel="noopener noreferrer"
+            startIcon={<InstagramIcon />}
+            aria-label="Instagram Suplementos Gold Shape Louveira"
+            sx={{
+              minHeight: 40,
+              px: 1.5,
+              borderRadius: "9px",
+              color: "#C13584",
+              borderColor: "#C13584",
+              fontSize: 12,
+              fontWeight: 600,
+              textTransform: "none",
+              whiteSpace: "nowrap",
+              minWidth: 0,
+              "& .MuiButton-startIcon": { mr: 0.75 },
+              "&:hover": { bgcolor: "#FDF2F8", borderColor: "#A12A70" },
+            }}
+          >
+            Instagram
+          </Button>
+        </Box>
       </Box>
+      <Typography
+        sx={{
+          px: { xs: 2, sm: 4 },
+          pb: 2,
+          color: "#A1AEA6",
+          fontSize: 12,
+          textAlign: "center",
+        }}
+      >
+        © {new Date().getFullYear()} {storeName}. Todos os direitos reservados.
+      </Typography>
+      <PaymentMethodsDrawer
+        open={isPaymentDrawerOpen}
+        onClose={() => setIsPaymentDrawerOpen(false)}
+      />
     </Box>
   );
 }

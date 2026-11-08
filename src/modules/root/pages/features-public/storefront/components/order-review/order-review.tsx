@@ -14,6 +14,9 @@ type OrderReviewProps = {
   isFeeToAgree: boolean;
   total: number;
   onEditDelivery: () => void;
+  isPixSelected?: boolean;
+  customerName: string;
+  customerWhatsapp: string;
 };
 
 type ValueRowProps = {
@@ -72,6 +75,9 @@ export function OrderReview({
   isFeeToAgree,
   total,
   onEditDelivery,
+  isPixSelected = true,
+  customerName,
+  customerWhatsapp,
 }: OrderReviewProps) {
   const area = delivery.area;
   const neighborhood = delivery.isManualArea ? delivery.neighborhood : (area?.name ?? "");
@@ -94,7 +100,8 @@ export function OrderReview({
 
         <Box sx={{ display: "grid", gap: 1.5 }}>
           {items.map((item) => {
-            const hasDiscount = item.originalPrice > item.unitPrice;
+            const unitPrice = isPixSelected ? item.unitPrice : item.originalPrice;
+            const hasDiscount = isPixSelected && item.originalPrice > item.unitPrice;
 
             return (
               <Box
@@ -155,13 +162,13 @@ export function OrderReview({
                     </Typography>
                   )}
                   <Typography sx={{ mt: 0.25, color: "#5A5F73", fontSize: 12 }}>
-                    {item.quantity} x {formatPrice(item.unitPrice)}
+                    {item.quantity} x {formatPrice(unitPrice)}
                   </Typography>
                 </Box>
 
                 <Box sx={{ textAlign: "right" }}>
                   <Typography sx={{ color: "#292D45", fontSize: 14, fontWeight: 800 }}>
-                    {formatPrice(item.unitPrice * item.quantity)}
+                    {formatPrice(unitPrice * item.quantity)}
                   </Typography>
                   {hasDiscount && (
                     <Typography component="s" sx={{ color: "#858A9D", fontSize: 12 }}>
@@ -216,6 +223,12 @@ export function OrderReview({
             bgcolor: "#FFFFFF",
           }}
         >
+          <Typography sx={{ color: "#292D45", fontSize: 14, fontWeight: 700 }}>
+            {customerName}
+          </Typography>
+          <Typography sx={{ mt: 0.25, color: "#5A5F73", fontSize: 13 }}>
+            WhatsApp: {customerWhatsapp}
+          </Typography>
           <Typography sx={{ color: "#292D45", fontSize: 14, fontWeight: 600 }}>
             {delivery.street}, {delivery.number}
             {delivery.complement ? ` - ${delivery.complement}` : ""}

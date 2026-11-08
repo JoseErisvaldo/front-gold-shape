@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { formatPhoneNumber } from "../../../../../../../shared/utils";
 import { formatPrice } from "../../helpers/format-price";
 import { usePublicDeliveryAreasQuery } from "../../queries/use-public-delivery-areas-query";
 import type { DeliveryInfo, PublicDeliveryArea } from "../../types/storefront.types";
@@ -20,6 +21,10 @@ type DeliveryFormProps = {
   isFeeLoading: boolean;
   isFeeError: boolean;
   cepNotFound: boolean;
+  customerName: string;
+  customerWhatsapp: string;
+  onCustomerNameChange: (value: string) => void;
+  onCustomerWhatsappChange: (value: string) => void;
   onChange: (patch: Partial<DeliveryInfo>) => void;
   onAreaSelect: (area: PublicDeliveryArea | null) => void;
   onManualChange: (manual: boolean) => void;
@@ -50,6 +55,10 @@ export function DeliveryForm({
   isFeeLoading,
   isFeeError,
   cepNotFound,
+  customerName,
+  customerWhatsapp,
+  onCustomerNameChange,
+  onCustomerWhatsappChange,
   onChange,
   onAreaSelect,
   onManualChange,
@@ -60,6 +69,28 @@ export function DeliveryForm({
 
   return (
     <Stack spacing={2}>
+      <Box sx={{ display: "grid", gap: 2 }}>
+        <Typography sx={{ color: "#292D45", fontSize: 15, fontWeight: 700 }}>Seus dados</Typography>
+        <TextField
+          required
+          label="Nome"
+          autoComplete="name"
+          value={customerName}
+          onChange={(event) => onCustomerNameChange(event.target.value)}
+          sx={fieldSx}
+        />
+        <TextField
+          required
+          label="WhatsApp"
+          type="tel"
+          autoComplete="tel"
+          value={customerWhatsapp}
+          onChange={(event) => onCustomerWhatsappChange(formatPhoneNumber(event.target.value))}
+          sx={fieldSx}
+          slotProps={{ htmlInput: { inputMode: "tel" } }}
+        />
+      </Box>
+
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <LocalShippingRoundedIcon sx={{ color: "#16A34A" }} fontSize="small" />
         <Typography sx={{ color: "#292D45", fontSize: 15, fontWeight: 700 }}>Entrega</Typography>
