@@ -33,7 +33,8 @@ export function CategoriesAutocomplete({
       onBlur={onBlur}
       renderOption={(props, option) => (
         <li {...props} style={{ ...props.style, color: option.active ? undefined : "#DC2626" }}>
-          {option.name}{option.active ? "" : " - Inativa"}
+          {option.name}
+          {option.active ? "" : " - Inativa"}
         </li>
       )}
       renderValue={(selected, getItemProps) =>
