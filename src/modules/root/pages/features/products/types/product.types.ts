@@ -32,4 +32,5 @@ export type ProductsFilters = Omit<ListProductsParams, "cursor">;
 export type CategoryOption = {
   id: string;
   name: string;
+  active: boolean;
 };
